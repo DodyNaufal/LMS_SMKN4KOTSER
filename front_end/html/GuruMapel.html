@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mata Pelajaran - SMK LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .subject-card:hover .subject-icon {
+        transform: scale(1.1);
+        transition: transform 0.3s ease;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        border-radius: 0.5rem;
+      }
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-3 border-b border-indigo-600">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <h1 class="text-xl font-bold">SMKN 4 LMS</h1>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <div
+              id="guruProfile"
+              class="flex items-center space-x-3 p-3 bg-indigo-800 rounded-lg"
+            ></div>
+          </div>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="DashboardGuru.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruMapel.html"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-indigo-800"
+              >
+                <i class="fas fa-book"></i>
+                <span>Mata Pelajaran</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruTugas.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tasks"></i>
+                <span>Tugas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruDiskusi.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-comments mr-3"></i>
+                <span>Diskusi</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruPengaturan.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+              </a>
+            </li>
+            <div class="absolute bottom-4 left-4 right-4">
+              <button
+                id="logoutButton"
+                class="w-fit py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+              >
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </button>
+            </div>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <button id="sidebarToggle" class="md:hidden mr-4 text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h2 class="text-xl font-semibold text-gray-800">Mata Pelajaran</h2>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <!-- Filter and Add Button -->
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4"
+          >
+            <div class="flex items-center space-x-3">
+              <div class="relative">
+                <select
+                  class="bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option>Semua Jurusan</option>
+                  <option>RPL</option>
+                  <option>TKJ</option>
+                  <option>MM</option>
+                  <option>AK</option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                >
+                  <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+              <div class="relative">
+                <select
+                  class="bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option>Semua Kelas</option>
+                  <option>X</option>
+                  <option>XI</option>
+                  <option>XII</option>
+                </select>
+                <div
+                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                >
+                  <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+            <button
+              class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center"
+            >
+              <i class="fas fa-plus mr-2"></i> Tambah Mata Pelajaran
+            </button>
+          </div>
+
+          <!-- Subject Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Subject Card 1 -->
+            <div
+              class="subject-card bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="subject-icon w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600"
+                >
+                  <i class="fas fa-code text-xl"></i>
+                </div>
+                <div class="dropdown relative">
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-content py-1">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Edit</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Hapus</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Duplikat</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                Pemrograman Web
+              </h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Materi tentang pengembangan website modern menggunakan HTML,
+                CSS, JavaScript dan framework.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span
+                  class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"
+                  >RPL</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X RPL 1</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X RPL 2</span
+                >
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <div class="flex items-center text-gray-500">
+                  <i class="fas fa-users mr-1"></i>
+                  <span>32 Siswa</span>
+                </div>
+                <a
+                  href="#"
+                  class="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >Lihat Detail</a
+                >
+              </div>
+            </div>
+
+            <!-- Subject Card 2 -->
+            <div
+              class="subject-card bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="subject-icon w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600"
+                >
+                  <i class="fas fa-network-wired text-xl"></i>
+                </div>
+                <div class="dropdown relative">
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-content py-1">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Edit</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Hapus</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Duplikat</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                Jaringan Komputer
+              </h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Dasar-dasar jaringan komputer, konfigurasi router, switch, dan
+                troubleshooting jaringan.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span
+                  class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"
+                  >TKJ</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >XI TKJ 1</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >XI TKJ 2</span
+                >
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <div class="flex items-center text-gray-500">
+                  <i class="fas fa-users mr-1"></i>
+                  <span>28 Siswa</span>
+                </div>
+                <a
+                  href="#"
+                  class="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >Lihat Detail</a
+                >
+              </div>
+            </div>
+
+            <!-- Subject Card 3 -->
+            <div
+              class="subject-card bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="subject-icon w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center text-yellow-600"
+                >
+                  <i class="fas fa-paint-brush text-xl"></i>
+                </div>
+                <div class="dropdown relative">
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-content py-1">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Edit</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Hapus</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Duplikat</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                Desain Grafis
+              </h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Konsep desain grafis menggunakan Adobe Photoshop, Illustrator
+                dan CorelDRAW.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span
+                  class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"
+                  >MM</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X MM 1</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X MM 2</span
+                >
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <div class="flex items-center text-gray-500">
+                  <i class="fas fa-users mr-1"></i>
+                  <span>25 Siswa</span>
+                </div>
+                <a
+                  href="#"
+                  class="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >Lihat Detail</a
+                >
+              </div>
+            </div>
+
+            <!-- Subject Card 4 -->
+            <div
+              class="subject-card bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="subject-icon w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-green-600"
+                >
+                  <i class="fas fa-calculator text-xl"></i>
+                </div>
+                <div class="dropdown relative">
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-content py-1">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Edit</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Hapus</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Duplikat</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                Akuntansi Dasar
+              </h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Dasar-dasar akuntansi, pembukuan, laporan keuangan untuk usaha
+                kecil dan menengah.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span
+                  class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"
+                  >AK</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X AK 1</span
+                >
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <div class="flex items-center text-gray-500">
+                  <i class="fas fa-users mr-1"></i>
+                  <span>20 Siswa</span>
+                </div>
+                <a
+                  href="#"
+                  class="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >Lihat Detail</a
+                >
+              </div>
+            </div>
+
+            <!-- Subject Card 5 -->
+            <div
+              class="subject-card bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+            >
+              <div class="flex justify-between items-start mb-4">
+                <div
+                  class="subject-icon w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center text-red-600"
+                >
+                  <i class="fas fa-bolt text-xl"></i>
+                </div>
+                <div class="dropdown relative">
+                  <button class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-content py-1">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Edit</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Hapus</a
+                    >
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >Duplikat</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                Teknik Listrik
+              </h3>
+              <p class="text-sm text-gray-500 mb-4">
+                Instalasi listrik rumah tangga, pengukuran dan perawatan
+                peralatan listrik dasar.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span
+                  class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded"
+                  >TE</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X TE 1</span
+                >
+                <span
+                  class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                  >X TE 2</span
+                >
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <div class="flex items-center text-gray-500">
+                  <i class="fas fa-users mr-1"></i>
+                  <span>22 Siswa</span>
+                </div>
+                <a
+                  href="#"
+                  class="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >Lihat Detail</a
+                >
+              </div>
+            </div>
+
+            <!-- Add New Subject Card -->
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 border-2 border-dashed border-gray-300 hover:border-indigo-400 transition-colors duration-300 flex flex-col items-center justify-center cursor-pointer"
+            >
+              <div
+                class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 mb-4"
+              >
+                <i class="fas fa-plus text-xl"></i>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                Tambah Mata Pelajaran
+              </h3>
+              <p class="text-sm text-gray-500 text-center mb-4">
+                Klik untuk menambahkan mata pelajaran baru ke dalam sistem
+              </p>
+              <button
+                class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Tambah Baru
+              </button>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="flex justify-center mt-8">
+            <nav class="inline-flex rounded-md shadow">
+              <a
+                href="#"
+                class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </a>
+              <a
+                href="#"
+                class="px-3 py-2 border-t border-b border-gray-300 bg-white text-indigo-600 font-medium"
+                >1</a
+              >
+              <a
+                href="#"
+                class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                >2</a
+              >
+              <a
+                href="#"
+                class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                >3</a
+              >
+              <a
+                href="#"
+                class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar for mobile
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("hidden");
+        });
+
+      // Add hover effect to subject cards
+      const subjectCards = document.querySelectorAll(".subject-card");
+      subjectCards.forEach((card) => {
+        card.addEventListener("mouseenter", function () {
+          const icon = this.querySelector(".subject-icon");
+          icon.classList.add("transform", "scale-110");
+        });
+        card.addEventListener("mouseleave", function () {
+          const icon = this.querySelector(".subject-icon");
+          icon.classList.remove("transform", "scale-110");
+        });
+      });
+
+      // Ambil profil guru login
+      async function fetchGuruProfile() {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) throw new Error("Token tidak ditemukan");
+
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!res.ok) throw new Error("Respon server gagal");
+
+          const data = await res.json();
+          const profileContainer = document.getElementById("guruProfile");
+
+          profileContainer.innerHTML = `
+              <img
+                src="${
+                  data.foto ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    data.name
+                  )}&background=8b5cf6&color=fff`
+                }"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p class="font-medium">${data.name}</p>
+                <p class="text-xs text-indigo-200">${data.email}</p>
+              </div>
+            `;
+        } catch (err) {
+          console.error("Gagal memuat profil guru:", err.message);
+        }
+      }
+      fetchGuruProfile();
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+          if (confirmLogout) {
+            // Hapus token login jika disimpan di localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("user"); // jika ada
+            // Redirect ke halaman login atau index.html
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+    </script>
+  </body>
+</html>

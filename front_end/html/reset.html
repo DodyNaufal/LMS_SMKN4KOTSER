@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Password</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f5f5f5;
+      }
+
+      .container {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Reset Password</h2>
+      <form id="resetPasswordForm">
+        <label for="newPassword">New Password</label>
+        <input
+          type="password"
+          id="newPassword"
+          required
+          placeholder="Enter your new password"
+        />
+        <button type="submit">Reset Password</button>
+      </form>
+    </div>
+
+    <!-- <script src="../javascript/reset.js"></script> -->
+
+    <script>
+      document
+        .getElementById("resetPasswordForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const newPassword = document.getElementById("newPassword").value;
+
+          // Ambil token dari query string dan decode
+          const urlParams = new URLSearchParams(window.location.search);
+          const token = urlParams.get("token");
+
+          console.log("Token from URL:", token); // Debug log
+
+          if (!token) {
+            alert("Token tidak ditemukan di URL.");
+            return;
+          }
+
+          try {
+            const response = await fetch(
+              "http://localhost:3000/api/users/update-password",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token, newPassword }),
+              }
+            );
+
+            const data = await response.json();
+            alert(data.message);
+
+            if (response.ok) {
+              window.location.href =
+                "http://127.0.0.1:5500/front_end/index.html";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Gagal mengubah password.");
+          }
+        });
+    </script>
+  </body>
+</html>

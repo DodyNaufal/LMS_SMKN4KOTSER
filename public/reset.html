@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Password</title>
+  </head>
+  <body>
+    <form id="resetPasswordForm">
+      <label for="newPassword">New Password</label>
+      <input type="password" id="newPassword" required />
+      <button type="submit">Reset Password</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("resetPasswordForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const newPassword = document.getElementById("newPassword").value;
+          const token = window.location.pathname.split("/").pop();
+
+          try {
+            const response = await fetch(
+              `http://localhost:3000/api/users/update-password/${token}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ newPassword }),
+              }
+            );
+
+            const data = await response.json();
+            alert(data.message);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        });
+    </script>
+  </body>
+</html>

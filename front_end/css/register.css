@@ -1,0 +1,66 @@
+body {
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5e7e7;
+  position: relative;
+}
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+input,
+select,
+button {
+  width: 98%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #218838;
+}
+.notification {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none;
+}
+
+.password-container {
+  position: relative;
+  display: inline-block;
+  width: 98%;
+  margin: 5px 0;
+  border-radius: 4px;
+}
+
+.password-container .eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 20px;
+  color: #888;
+}
+
+.password-container .eye-icon:hover {
+  color: #333;
+}

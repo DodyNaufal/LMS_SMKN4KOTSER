@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMK LMS - Course Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar {
+        transition: all 0.3s ease;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          transform: translateX(-100%);
+          z-index: 50;
+          height: 100vh;
+        }
+      }
+      .course-card {
+        transition: all 0.3s ease;
+      }
+      .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+      }
+      .chip {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-800 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-2 border-b border-indigo-700">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <span class="text-xl font-bold">SMKN 4 LMS</span>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <p class="text-indigo-300 uppercase text-xs font-bold mb-2">
+              Main Menu
+            </p>
+            <a
+              href="DashboardAdmin.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg"
+            >
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="AdminSiswa.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-users"></i>
+              <span>Students</span>
+            </a>
+            <a
+              href="AdminGuru.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Teachers</span>
+            </a>
+            <a
+              href="AdminCourses.html"
+              class="flex items-center space-x-2 py-2 px-3 bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-book"></i>
+              <span>Courses</span>
+            </a>
+            <a
+              href="AdminSeting.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 overflow-auto">
+        <!-- Top Navigation -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-4">
+            <button id="sidebarToggle" class="md:hidden text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h1 class="text-xl font-bold text-gray-800">Course Management</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <i
+                class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              ></i>
+              <input
+                type="text"
+                placeholder="Search courses..."
+                class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+        </header>
+
+        <!-- Course Content -->
+        <main class="p-6">
+          <!-- Course Actions -->
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4"
+          >
+            <div>
+              <h2 class="text-lg font-semibold text-gray-800">All Courses</h2>
+              <p class="text-sm text-gray-500">
+                Manage all available courses and materials
+              </p>
+            </div>
+            <div class="flex space-x-3">
+              <button
+                id="btn-add-course"
+                class="btn-add-course px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center space-x-2"
+              >
+                <i class="fas fa-plus"></i>
+                <span>Create New Course</span>
+              </button>
+              <button
+                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center space-x-2"
+              >
+                <i class="fas fa-filter"></i>
+                <span>Filters</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Course Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div
+              class="bg-white rounded-xl shadow-sm p-4 card-hover transition-all duration-300"
+            >
+              <div class="flex justify-between">
+                <div>
+                  <p class="text-gray-500 text-sm">Total Courses</p>
+                  <h3 class="text-2xl font-bold mt-1" id="total-courses-count">
+                    0
+                  </h3>
+                </div>
+                <div class="bg-indigo-100 p-3 rounded-lg h-fit">
+                  <i class="fas fa-book text-indigo-600"></i>
+                </div>
+              </div>
+              <p class="text-green-500 text-xs mt-2">
+                <i class="fas fa-arrow-up"></i> 15% from last semester
+              </p>
+            </div>
+          </div>
+
+          <!-- View Toggle -->
+          <div class="flex justify-between items-center mb-6">
+            <div class="flex space-x-2">
+              <button
+                class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm"
+              >
+                All Courses
+              </button>
+            </div>
+          </div>
+
+          <!-- Course Table -->
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Course
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Kelas
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Teacher
+                    </th>
+
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="course-table-body"
+                  class="bg-white divide-y divide-gray-200"
+                ></tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200"
+            >
+              <div class="flex-1 flex justify-between sm:hidden">
+                <a
+                  href="#"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Previous
+                </a>
+                <a
+                  href="#"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Next
+                </a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div
+      id="courseModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+        <button
+          id="closeModal"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <h2 id="modalTitle" class="text-xl font-semibold mb-4">
+          Detail Kursus
+        </h2>
+        <form id="courseForm">
+          <input type="hidden" id="courseId" />
+
+          <div class="mb-4">
+            <label class="block mb-1">Nama Kursus</label>
+            <input
+              type="text"
+              id="courseName"
+              class="w-full border px-3 py-2 rounded"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Deskripsi</label>
+            <textarea
+              id="courseDescription"
+              class="w-full border px-3 py-2 rounded"
+            ></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Kelas</label>
+            <input
+              type="text"
+              id="courseKelas"
+              class="w-full border px-3 py-2 rounded"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+          >
+            Simpan
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Toggle sidebar on mobile
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
+
+      // start fetching
+      document.addEventListener("DOMContentLoaded", () => {
+        const tbody = document.getElementById("course-table-body");
+        const modal = document.getElementById("courseModal");
+        const form = document.getElementById("courseForm");
+        const closeModal = document.getElementById("closeModal");
+
+        function fetchCourses(
+          url = "http://localhost:3000/api/dashboard/admin/courses"
+        ) {
+          fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+              if (Array.isArray(data)) {
+                if (data.length === 0) {
+                  tbody.innerHTML =
+                    "<tr><td colspan='5' class='text-center p-4 text-gray-500'>Data tidak ditemukan.</td></tr>";
+                } else {
+                  renderCourseTable(data);
+                }
+              } else {
+                console.error("Data course tidak valid:", data);
+              }
+            })
+            .catch((err) => {
+              console.error("Gagal mengambil data course:", err);
+            });
+        }
+
+        function renderCourseTable(data) {
+          tbody.innerHTML = "";
+
+          data.forEach((course) => {
+            const initials = course.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase();
+
+            const row = `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10">
+                <div class="avatar rounded-full h-10 w-10 flex items-center justify-center text-white font-bold bg-indigo-500">
+                  ${initials}
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">${
+                  course.name
+                }</div>
+                <div class="text-sm text-gray-500">${
+                  course.description || "-"
+                }</div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${course.kelas || "-"}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            ${course.created_by_name || "-"}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <div class="flex justify-end space-x-2">
+              <button class="btn-view text-indigo-600 hover:text-indigo-900" data-id="${
+                course.id
+              }">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-edit text-blue-600 hover:text-blue-900" data-id="${
+                course.id
+              }">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-delete text-red-600 hover:text-red-900" data-id="${
+                course.id
+              }">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </td>
+        </tr>`;
+            tbody.innerHTML += row;
+          });
+        }
+
+        fetch("http://localhost:3000/api/dashboard/admin/courses/stats")
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById("total-courses-count").textContent =
+              data.total;
+          })
+          .catch((err) => {
+            console.error("Gagal mengambil total courses:", err);
+            document.getElementById("total-courses-count").textContent =
+              "Error";
+          });
+
+        // Modal handling
+        function openModal(title, course = {}, readOnly = false) {
+          modal.classList.remove("hidden");
+          document.getElementById("modalTitle").textContent = title;
+          document.getElementById("courseId").value = course.id || "";
+          document.getElementById("courseName").value = course.name || "";
+          document.getElementById("courseDescription").value =
+            course.description || "";
+          document.getElementById("courseKelas").value = course.kelas || "";
+
+          // Atur readonly jika hanya view
+          ["courseName", "courseDescription", "courseKelas"].forEach((id) => {
+            document.getElementById(id).readOnly = readOnly;
+          });
+
+          // Sembunyikan tombol simpan jika readonly
+          form.querySelector("button[type='submit']").style.display = readOnly
+            ? "none"
+            : "block";
+        }
+
+        function closeModalFunc() {
+          modal.classList.add("hidden");
+          form.reset();
+        }
+
+        closeModal.addEventListener("click", closeModalFunc);
+
+        // Form submit (untuk tambah/edit)
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const id = document.getElementById("courseId").value;
+          const course = {
+            name: document.getElementById("courseName").value,
+            description: document.getElementById("courseDescription").value,
+            kelas: document.getElementById("courseKelas").value,
+          };
+
+          const method = id ? "PUT" : "POST";
+          const url = id
+            ? `http://localhost:3000/api/dashboard/admin/courses/${id}`
+            : "http://localhost:3000/api/dashboard/admin/courses";
+
+          fetch(url, {
+            method,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(course),
+          })
+            .then((res) => res.json())
+            .then(() => {
+              closeModalFunc();
+              fetchCourses();
+            })
+            .catch((err) => {
+              console.error("Gagal menyimpan data:", err);
+            });
+        });
+
+        // Delegasi tombol action
+        document
+          .getElementById("course-table-body")
+          .addEventListener("click", (e) => {
+            const btn = e.target.closest("button");
+            if (!btn) return;
+
+            const id = btn.dataset.id;
+            const isView = btn.classList.contains("btn-view");
+            const isEdit = btn.classList.contains("btn-edit");
+            const isDelete = btn.classList.contains("btn-delete");
+
+            if (isView || isEdit) {
+              fetch(`http://localhost:3000/api/dashboard/admin/courses/${id}`)
+                .then((res) => res.json())
+                .then((data) => {
+                  openModal(
+                    isView ? "Lihat Kursus" : "Edit Kursus",
+                    data,
+                    isView
+                  );
+                })
+                .catch((err) => {
+                  console.error("Gagal mengambil data:", err);
+                });
+            }
+
+            if (isDelete) {
+              if (confirm("Apakah Anda yakin ingin menghapus kursus ini?")) {
+                fetch(
+                  `http://localhost:3000/api/dashboard/admin/courses/${id}`,
+                  {
+                    method: "DELETE",
+                  }
+                )
+                  .then((res) => res.json())
+                  .then(() => {
+                    fetchCourses();
+                  })
+                  .catch((err) => {
+                    console.error("Gagal menghapus data:", err);
+                  });
+              }
+            }
+          });
+        document
+          .querySelector(".btn-add-course")
+          .addEventListener("click", () => {
+            form.reset();
+            document.getElementById("courseId").value = "";
+            openModal("Tambah Course");
+          });
+        fetchCourses();
+      });
+    </script>
+  </body>
+</html>

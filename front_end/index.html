@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LMS SMKN 4 Kota Serang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .form-container {
+        transition: all 0.3s ease;
+        transform: translateX(0);
+      }
+      .form-container.hidden {
+        opacity: 0;
+        transform: translateX(100px);
+        pointer-events: none;
+        position: absolute;
+      }
+      .password-toggle {
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .password-toggle:hover {
+        transform: scale(1.1);
+      }
+      .input-highlight {
+        transition: all 0.3s;
+        height: 2px;
+        background: #4f46e5;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+      }
+      input:focus ~ .input-highlight {
+        width: 100%;
+      }
+      .floating-label {
+        transition: all 0.3s;
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #9ca3af;
+      }
+      input:focus ~ .floating-label,
+      input:not(:placeholder-shown) ~ .floating-label {
+        top: 0;
+        left: 10px;
+        font-size: 0.75rem;
+        background: white;
+        padding: 0 4px;
+        color: #4f46e5;
+      }
+      @media (max-width: 768px) {
+        .split-container {
+          flex-direction: column;
+        }
+        .welcome-section {
+          border-radius: 10px 10px 0 0 !important;
+        }
+        .form-section {
+          border-radius: 0 0 10px 10px !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="font-poppins bg-gray-100 min-h-screen flex items-center justify-center p-4"
+  >
+    <div
+      class="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden split-container flex flex-col md:flex-row"
+    >
+      <!-- Welcome Section -->
+      <div
+        class="welcome-section bg-gradient-to-br from-indigo-600 to-purple-600 text-white p-8 md:w-1/2 flex flex-col justify-center rounded-l-xl"
+      >
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold mb-2">Selamat Datang di</h1>
+          <h2 class="text-2xl font-semibold">LMS SMKN 4 KOTA SERANG</h2>
+        </div>
+
+        <div class="mt-6">
+          <div class="flex items-center mb-4">
+            <div
+              class="w-8 h-8 rounded-full bg-white text-indigo-600 flex items-center justify-center mr-3"
+            >
+              <i class="fas fa-check"></i>
+            </div>
+            <p>Akses materi pembelajaran online</p>
+          </div>
+          <div class="flex items-center mb-4">
+            <div
+              class="w-8 h-8 rounded-full bg-white text-indigo-600 flex items-center justify-center mr-3"
+            >
+              <i class="fas fa-check"></i>
+            </div>
+            <p>Interaksi dengan guru dan teman</p>
+          </div>
+          <div class="flex items-center">
+            <div
+              class="w-8 h-8 rounded-full bg-white text-indigo-600 flex items-center justify-center mr-3"
+            >
+              <i class="fas fa-check"></i>
+            </div>
+            <p>Pantau perkembangan belajar</p>
+          </div>
+        </div>
+
+        <div class="mt-12 text-center hidden md:block">
+          <img
+            src="./asset/smkn_4.png"
+            alt="Education"
+            class="w-40 mx-auto opacity-90"
+          />
+        </div>
+      </div>
+
+      <!-- Form Section -->
+      <div
+        class="form-section p-8 md:w-1/2 relative overflow-hidden rounded-r-xl"
+      >
+        <!-- Login Form -->
+        <div id="loginForm" class="form-container">
+          <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800">Masuk ke Akun</h2>
+            <p class="text-gray-600">Gunakan email dan password Anda</p>
+          </div>
+
+          <form id="loginFormElement" class="space-y-6">
+            <div class="relative">
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder=" "
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <label class="floating-label">Email</label>
+              <div class="input-highlight"></div>
+            </div>
+
+            <div class="relative">
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder=" "
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-10"
+              />
+              <label class="floating-label">Password</label>
+              <div class="input-highlight"></div>
+              <span
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 password-toggle"
+                onclick="togglePassword('loginPassword', this)"
+              >
+                <i class="far fa-eye"></i>
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input
+                  id="rememberMe"
+                  type="checkbox"
+                  class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                />
+                <label for="rememberMe" class="ml-2 block text-sm text-gray-700"
+                  >Ingat saya</label
+                >
+              </div>
+              <a
+                href="./html/forgot.html"
+                class="text-sm text-indigo-600 hover:text-indigo-500"
+                >Lupa password?</a
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center"
+            >
+              <span>Masuk</span>
+              <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+          </form>
+
+          <div class="mt-6 text-center">
+            <p class="text-gray-600">
+              Belum punya akun?
+              <a
+                href="./html/register.html"
+                onclick="showRegister()"
+                class="text-indigo-600 font-medium hover:text-indigo-500 transition"
+                >Daftar sekarang</a
+              >
+            </p>
+          </div>
+
+          <!-- <div class="mt-8">
+            <div class="relative">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500"
+                  >Atau masuk dengan</span
+                >
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                <i class="fab fa-google text-red-500 mr-2"></i> Google
+              </button>
+              <button
+                type="button"
+                class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                <i class="fab fa-microsoft text-blue-500 mr-2"></i> Microsoft
+              </button>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Toggle password visibility
+      function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        const iconElement = icon.querySelector("i");
+
+        if (input.type === "password") {
+          input.type = "text";
+          iconElement.classList.remove("fa-eye");
+          iconElement.classList.add("fa-eye-slash");
+        } else {
+          input.type = "password";
+          iconElement.classList.remove("fa-eye-slash");
+          iconElement.classList.add("fa-eye");
+        }
+      }
+
+      // Switch between login and register forms
+      function showRegister() {
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("registerForm").classList.remove("hidden");
+      }
+
+      function showLogin() {
+        document.getElementById("registerForm").classList.add("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+      }
+
+      // Add floating label functionality for all inputs
+      document.querySelectorAll("input").forEach((input) => {
+        // Initialize floating labels based on current value
+        if (input.value) {
+          const label = input.nextElementSibling;
+          label.style.top = "0";
+          label.style.left = "10px";
+          label.style.fontSize = "0.75rem";
+          label.style.background = "white";
+          label.style.padding = "0 4px";
+        }
+
+        input.addEventListener("focus", function () {
+          const label = this.nextElementSibling;
+          label.style.color = "#4f46e5";
+        });
+
+        input.addEventListener("blur", function () {
+          const label = this.nextElementSibling;
+          if (!this.value) {
+            label.style.color = "#9ca3af";
+          }
+        });
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+
+        if (loginForm) {
+          loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+
+            const response = await fetch(
+              "http://localhost:3000/api/users/login",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+              }
+            );
+
+            const result = await response.json();
+
+            if (response.ok) {
+              // Simpan token ke localStorage
+              localStorage.setItem("token", result.token);
+              localStorage.setItem("user", JSON.stringify(result.user));
+
+              alert("Login berhasil!");
+
+              // Redirect berdasarkan role
+              switch (result.user.role.toLowerCase()) {
+                case "admin":
+                  window.location.href = "/front_end/html/DashboardAdmin.html";
+                  break;
+                case "guru":
+                  window.location.href = "/front_end/html/DashboardGuru.html";
+                  break;
+                case "siswa":
+                  window.location.href = "/front_end/html/DashboardSiswa.html";
+                  break;
+                default:
+                  alert("Peran tidak dikenali: " + result.user.role);
+                  break;
+              }
+            } else {
+              alert(
+                result.message || "Login gagal, periksa kembali data Anda."
+              );
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

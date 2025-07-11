@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengaturan - SMK LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .settings-card {
+        transition: all 0.3s ease;
+      }
+      .settings-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .tab-active {
+        border-bottom: 3px solid #4f46e5;
+        color: #4f46e5;
+        font-weight: 600;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        border-radius: 0.5rem;
+      }
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 40px;
+        height: 20px;
+        background: #e5e7eb;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+      input[type="checkbox"]:checked {
+        background: #4f46e5;
+      }
+      input[type="checkbox"]::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: white;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s ease;
+      }
+      input[type="checkbox"]:checked::before {
+        left: 22px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-3 border-b border-indigo-600">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <h1 class="text-xl font-bold">SMKN 4 LMS</h1>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <div
+              id="guruProfile"
+              class="flex items-center space-x-3 p-3 bg-indigo-800 rounded-lg"
+            >
+              <!-- <img
+                src="https://ui-avatars.com/api/?name=Guru+SMK&background=8b5cf6&color=fff"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p class="font-medium">Guru SMK</p>
+                <p class="text-xs text-indigo-200">Pengajar</p>
+              </div> -->
+            </div>
+          </div>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="DashboardGuru.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a
+                href="GuruMapel.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-book"></i>
+                <span>Mata Pelajaran</span>
+              </a>
+            </li> -->
+            <li>
+              <a
+                href="GuruTugas.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tasks"></i>
+                <span>Tugas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruDiskusi.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-comments"></i>
+                <span>Diskusi</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-indigo-800"
+              >
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+              </a>
+            </li>
+            <div class="absolute bottom-4 left-4 right-4">
+              <button
+                id="logoutButton"
+                class="w-fit py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+              >
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </button>
+            </div>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <button id="sidebarToggle" class="md:hidden mr-4 text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h2 class="text-xl font-semibold text-gray-800">Pengaturan</h2>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <!-- Tabs -->
+          <div class="mb-6 border-b border-gray-200">
+            <!-- Settings Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- Profile Settings -->
+              <div class="lg:col-span-2">
+                <div
+                  class="settings-card bg-white rounded-xl shadow-sm p-6 mb-6"
+                >
+                  <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    Profil Saya
+                  </h3>
+
+                  <div class="flex flex-col md:flex-row gap-6 mb-6">
+                    <div class="flex flex-col items-center">
+                      <img
+                        src="https://ui-avatars.com/api/?name=Guru+SMK&background=8b5cf6&color=fff"
+                        alt="Profile"
+                        class="w-24 h-24 rounded-full mb-3"
+                      />
+                      <button class="text-indigo-600 text-sm font-medium">
+                        Ubah Foto
+                      </button>
+                    </div>
+
+                    <div class="flex-1 space-y-4">
+                      <div>
+                        <label
+                          class="block text-sm font-medium text-gray-700 mb-1"
+                          >Nama Lengkap</label
+                        >
+                        <input
+                          type="text"
+                          name="name"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          class="block text-sm font-medium text-gray-700 mb-1"
+                          >Email</label
+                        >
+                        <input
+                          type="email"
+                          name="email"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          class="block text-sm font-medium text-gray-700 mb-1"
+                          >NIP</label
+                        >
+                        <input
+                          type="text"
+                          name="nip"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          class="block text-sm font-medium text-gray-700 mb-1"
+                          >MAPEL</label
+                        >
+                        <input
+                          type="text"
+                          name="mapel"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-between items-center">
+                    <button
+                      id="saveButton"
+                      type="button"
+                      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                      Simpan Perubahan
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar for mobile
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("hidden");
+        });
+
+      // Tab switching functionality
+      const tabs = document.querySelectorAll(".border-b button");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", function () {
+          tabs.forEach((t) => t.classList.remove("tab-active"));
+          this.classList.add("tab-active");
+        });
+      });
+
+      // Toggle password visibility
+      document.querySelectorAll(".relative button").forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+          const input = this.previousElementSibling;
+          if (input.type === "password") {
+            input.type = "text";
+            this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+          } else {
+            input.type = "password";
+            this.innerHTML = '<i class="fas fa-eye"></i>';
+          }
+        });
+      });
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+          if (confirmLogout) {
+            // Hapus token login jika disimpan di localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("user"); // jika ada
+            // Redirect ke halaman login atau index.html
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+
+      async function fetchGuruProfile() {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) throw new Error("Token tidak ditemukan");
+
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!res.ok) throw new Error("Respon server gagal");
+
+          const data = await res.json();
+          const profileContainer = document.getElementById("guruProfile");
+
+          profileContainer.innerHTML = `
+              <img
+                src="${
+                  data.foto ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    data.name
+                  )}&background=8b5cf6&color=fff`
+                }"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p class="font-medium">${data.name}</p>
+                <p class="text-xs text-indigo-200">${data.email}</p>
+              </div>
+            `;
+        } catch (err) {
+          console.error("Gagal memuat profil guru:", err.message);
+        }
+      }
+      fetchGuruProfile();
+
+      async function loadProfile() {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          "http://localhost:3000/api/dashboard/guru/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          document.querySelector('input[name="name"]').value = data.name || "";
+          document.querySelector('input[name="email"]').value =
+            data.email || "";
+          document.querySelector('input[name="nip"]').value = data.nip || "";
+          document.querySelector('input[name="mapel"]').value =
+            data.mapel || "";
+        }
+      }
+
+      document
+        .querySelector("button.bg-indigo-600")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("token");
+
+          const payload = {
+            name: document.querySelector('input[name="name"]').value,
+            email: document.querySelector('input[name="email"]').value,
+            nip: document.querySelector('input[name="nip"]').value,
+            mapel: document.querySelector('input[name="mapel"]').value,
+          };
+
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/profile",
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            }
+          );
+
+          if (res.ok) {
+            alert("Profil berhasil diperbarui.");
+          } else {
+            alert("Gagal memperbarui profil.");
+          }
+        });
+
+      loadProfile();
+
+      document
+        .getElementById("saveButton")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("token");
+
+          const payload = {
+            name: document.querySelector('input[name="name"]').value,
+            email: document.querySelector('input[name="email"]').value,
+            nip: document.querySelector('input[name="nip"]').value,
+            mapel: document.querySelector('input[name="mapel"]').value,
+          };
+
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/profile",
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+            }
+          );
+
+          const result = await res.json();
+          console.log("Hasil simpan:", result);
+
+          if (res.ok) {
+            alert("Profil berhasil diperbarui.");
+          } else {
+            alert(
+              "Gagal menyimpan profil: " +
+                (result.message || "Terjadi kesalahan.")
+            );
+          }
+        });
+    </script>
+  </body>
+</html>

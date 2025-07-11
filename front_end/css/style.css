@@ -1,0 +1,128 @@
+/* Style umum */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f5e7e7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Kontainer utama */
+.container {
+  display: flex;
+  flex-direction: row;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Bagian kiri */
+.left-section {
+  padding: 40px;
+  background-color: #f8eaea;
+  border-radius: 10px 0 0 10px;
+}
+
+.left-section h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.left-section h1 {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+/* Bagian kanan (Form) */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  width: 100%;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  width: 50%;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+.extra-links {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.extra-links a {
+  color: black;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.extra-links a:hover {
+  text-decoration: underline;
+}
+
+a {
+  color: inherit; /* Tetap menggunakan warna teks default */
+  text-decoration: none; /* Tetap tanpa garis bawah */
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 95%;
+  /* padding-right: 40px; */
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

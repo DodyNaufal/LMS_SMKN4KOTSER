@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMK LMS - Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/DashboardAdmin.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-800 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-2 border-b border-indigo-700">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <span class="text-xl font-bold">SMKN 4 LMS</span>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <p class="text-indigo-300 uppercase text-xs font-bold mb-2">
+              Main Menu
+            </p>
+            <a
+              href="DashboardAdmin.html"
+              class="flex items-center space-x-2 py-2 px-3 bg-indigo-700 rounded-lg"
+            >
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="AdminSiswa.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-users"></i>
+              <span>Students</span>
+            </a>
+            <a
+              href="AdminGuru.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Teachers</span>
+            </a>
+            <a
+              href="AdminCourses.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-book"></i>
+              <span>Courses</span>
+            </a>
+            <a
+              href="AdminSeting.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 overflow-auto">
+        <!-- Top Navigation -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-4">
+            <button id="sidebarToggle" class="md:hidden text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
+          </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+          <!-- Summary Cards -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
+          >
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Total Siswa</p>
+                  <!-- <h3 class="text-3xl font-bold mt-2">1,248</h3> -->
+                  <h3 class="text-3xl font-bold mt-2" id="totalSiswa">...</h3>
+                  <p class="text-green-500 text-sm mt-1">
+                    <i class="fas fa-arrow-up"></i> 12% from last month
+                  </p>
+                </div>
+                <div class="bg-indigo-100 p-3 rounded-lg">
+                  <i class="fas fa-users text-indigo-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Total guru</p>
+                  <!-- <h3 class="text-3xl font-bold mt-2">64</h3> -->
+                  <h3 class="text-3xl font-bold mt-2" id="totalGuru">...</h3>
+                  <p class="text-green-500 text-sm mt-1">
+                    <i class="fas fa-arrow-up"></i> 5% from last month
+                  </p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-lg">
+                  <i
+                    class="fas fa-chalkboard-teacher text-blue-600 text-xl"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Courses/Subjects</p>
+                  <!-- <h3 class="text-3xl font-bold mt-2">38</h3> -->
+                  <h3 class="text-3xl font-bold mt-2" id="totalMapel">...</h3>
+                  <p class="text-green-500 text-sm mt-1">
+                    <i class="fas fa-arrow-up"></i> 3 new this month
+                  </p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-lg">
+                  <i class="fas fa-book text-green-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Active Sessions</p>
+                  <h3 class="text-3xl font-bold mt-2" id="aktivitasHariIni">
+                    ...
+                  </h3>
+                  <p class="text-red-500 text-sm mt-1">
+                    <i class="fas fa-arrow-down"></i> 8% from yesterday
+                  </p>
+                </div>
+                <div class="bg-purple-100 p-3 rounded-lg">
+                  <i class="fas fa-sign-in-alt text-purple-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Growth Chart -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Student & Teacher Growth</h2>
+                <div class="flex space-x-2">
+                  <button
+                    class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm"
+                  >
+                    Monthly
+                  </button>
+                  <button
+                    class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm"
+                  >
+                    Yearly
+                  </button>
+                </div>
+              </div>
+              <canvas id="growthChart" height="250"></canvas>
+            </div>
+
+            <!-- Program Distribution -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Students by Program</h2>
+                <div class="flex space-x-2">
+                  <button
+                    class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm"
+                  >
+                    View All
+                  </button>
+                </div>
+              </div>
+              <canvas id="programChart" height="250"></canvas>
+            </div>
+          </div>
+
+          <!-- Usage Statistics -->
+          <!-- <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-lg font-semibold">Platform Usage Statistics</h2>
+              <div class="flex space-x-2">
+                <button
+                  class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm"
+                >
+                  Weekly
+                </button>
+                <button
+                  class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm"
+                >
+                  Daily
+                </button>
+              </div>
+            </div>
+            <canvas id="usageChart" height="150"></canvas>
+          </div> -->
+
+          <!-- Bottom Row -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Pending Verifications -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Pending Verifications</h2>
+                <span
+                  class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full"
+                  >5 new</span
+                >
+              </div>
+              <div class="space-y-4" id="pendingVerificationsContainer">
+                <div class="flex items-center justify-between p-3 border-b">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"
+                    >
+                      <i class="fas fa-user text-gray-500"></i>
+                    </div>
+                    <div>
+                      <p class="font-medium">Andi Pratama</p>
+                      <p class="text-sm text-gray-500">New Student - TKJ</p>
+                    </div>
+                  </div>
+                  <div class="flex space-x-2">
+                    <button
+                      class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between p-3 border-b">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"
+                    >
+                      <i class="fas fa-user text-gray-500"></i>
+                    </div>
+                    <div>
+                      <p class="font-medium">Budi Santoso</p>
+                      <p class="text-sm text-gray-500">New Teacher - RPL</p>
+                    </div>
+                  </div>
+                  <div class="flex space-x-2">
+                    <button
+                      class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between p-3 border-b">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"
+                    >
+                      <i class="fas fa-user text-gray-500"></i>
+                    </div>
+                    <div>
+                      <p class="font-medium">Citra Dewi</p>
+                      <p class="text-sm text-gray-500">New Student - MM</p>
+                    </div>
+                  </div>
+                  <div class="flex space-x-2">
+                    <button
+                      class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+                <div class="text-center pt-2">
+                  <button class="text-indigo-600 text-sm font-medium">
+                    View All Pending
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity Log -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Recent Activity Log</h2>
+                <button class="text-indigo-600 text-sm font-medium">
+                  View All
+                </button>
+              </div>
+              <div class="space-y-4" id="activityLogsContainer">
+                <div class="flex items-start space-x-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mt-1 flex-shrink-0"
+                  >
+                    <i class="fas fa-user-plus text-indigo-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="font-medium">New student registration</p>
+                    <p class="text-sm text-gray-500">
+                      Andi Pratama registered for TKJ program - 10 mins ago
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mt-1 flex-shrink-0"
+                  >
+                    <i class="fas fa-book text-blue-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="font-medium">New course added</p>
+                    <p class="text-sm text-gray-500">
+                      "Pemrograman Web Dasar" added to RPL program - 1 hour ago
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mt-1 flex-shrink-0"
+                  >
+                    <i class="fas fa-check text-green-600 text-sm"></i>
+                  </div>
+                  <div>
+                    <p class="font-medium">Assignment submitted</p>
+                    <p class="text-sm text-gray-500">
+                      Siti Rahayu submitted "Tugas Desain Grafis" - 2 hours ago
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mt-1 flex-shrink-0"
+                  >
+                    <i
+                      class="fas fa-chalkboard-teacher text-purple-600 text-sm"
+                    ></i>
+                  </div>
+                  <div>
+                    <p class="font-medium">Teacher account created</p>
+                    <p class="text-sm text-gray-500">
+                      Budi Santoso account created for RPL program - 3 hours ago
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar on mobile
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Fetch statistik dashboard admin
+        fetch("http://localhost:3000/api/dashboard/admin/stats")
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById("totalSiswa").innerText = data.totalSiswa;
+            document.getElementById("totalGuru").innerText = data.totalGuru;
+            document.getElementById("totalMapel").innerText = data.totalMapel;
+            document.getElementById("aktivitasHariIni").innerText =
+              data.aktivitasHariIni;
+          })
+          .catch((err) => console.error("Error fetch stats:", err));
+
+        // Fetch log aktivitas terbaru
+        fetch("http://localhost:3000/api/dashboard/admin/logs")
+          .then((res) => res.json())
+          .then((data) => {
+            const container = document.querySelector("#admin tbody");
+            container.innerHTML = data
+              .map(
+                (log) => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${new Date(
+              log.created_at
+            ).toLocaleString()}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-medium">${log.name}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">${log.action}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-500">-</div>
+          </td>
+        </tr>
+      `
+              )
+              .join("");
+          })
+          .catch((err) => console.error("Error fetch logs:", err));
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // === CHART 1: Student & Teacher Growth ===
+        fetch("http://localhost:3000/api/dashboard/admin/growth")
+          .then((res) => res.json())
+          .then((data) => {
+            const labels = [
+              "Jan",
+              "Feb",
+              "Maret",
+              "April",
+              "Mei",
+              "Juni",
+              "Juli",
+              "Agustus",
+              "Sept",
+              "Okt",
+              "Nov",
+              "Des",
+            ];
+            const siswaData = new Array(12).fill(0);
+            const guruData = new Array(12).fill(0);
+
+            data.siswa.forEach((row) => (siswaData[row.bulan - 1] = row.total));
+            data.guru.forEach((row) => (guruData[row.bulan - 1] = row.total));
+
+            new Chart(document.getElementById("growthChart"), {
+              type: "line",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "Siswa",
+                    data: siswaData,
+                    borderColor: "#4f46e5",
+                    backgroundColor: "rgba(79,70,229,0.1)",
+                    tension: 0.3,
+                  },
+                  {
+                    label: "Guru",
+                    data: guruData,
+                    borderColor: "#06b6d4",
+                    backgroundColor: "rgba(6,182,212,0.1)",
+                    tension: 0.3,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { position: "top" },
+                },
+              },
+            });
+          });
+
+        // === CHART 2: Students by Program ===
+        fetch("http://localhost:3000/api/dashboard/admin/programs")
+          .then((res) => res.json())
+          .then((data) => {
+            const labels = data.map((p) => p.role);
+            const values = data.map((p) => p.total);
+
+            new Chart(document.getElementById("programChart"), {
+              type: "doughnut",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "Jumlah",
+                    data: values,
+                    backgroundColor: [
+                      "#6366f1",
+                      "#10b981",
+                      "#f59e0b",
+                      "#ef4444",
+                    ],
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { position: "bottom" },
+                },
+              },
+            });
+          });
+
+        // === CHART 3: Platform Usage Statistics ===
+        fetch("http://localhost:3000/api/dashboard/admin/usage")
+          .then((res) => res.json())
+          .then((data) => {
+            const labels = data.map((u) =>
+              new Date(u.tanggal).toLocaleDateString()
+            );
+            const values = data.map((u) => u.total);
+
+            new Chart(document.getElementById("usageChart"), {
+              type: "bar",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "Log Aktivitas",
+                    data: values,
+                    backgroundColor: "#8b5cf6",
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: { beginAtZero: true },
+                },
+              },
+            });
+          });
+
+        fetch("http://localhost:3000/api/dashboard/admin/logs")
+          .then((res) => res.json())
+          .then((data) => {
+            const container = document.getElementById("activityLogsContainer");
+            container.innerHTML = "";
+
+            if (data.length === 0) {
+              container.innerHTML =
+                "<p class='text-gray-400 text-sm text-center'>Belum ada aktivitas terbaru.</p>";
+              return;
+            }
+
+            data.forEach((log) => {
+              container.innerHTML += `
+        <div class="flex items-start space-x-3">
+          <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mt-1 flex-shrink-0">
+            <i class="fas fa-user text-indigo-600 text-sm"></i>
+          </div>
+          <div>
+            <p class="font-medium">${log.action}</p>
+            <p class="text-sm text-gray-500">
+              ${log.name} - ${new Date(log.created_at).toLocaleString()}
+            </p>
+          </div>
+        </div>
+      `;
+            });
+          })
+          .catch((err) => console.error("Fetch activity logs error:", err));
+      });
+
+      fetch("http://localhost:3000/api/dashboard/admin/verifications")
+        .then((res) => res.json())
+        .then((data) => {
+          const container = document.getElementById(
+            "pendingVerificationsContainer"
+          );
+          container.innerHTML = "";
+
+          if (data.length === 0) {
+            container.innerHTML =
+              "<p class='text-center text-gray-400'>Tidak ada verifikasi pending.</p>";
+            return;
+          }
+
+          data.forEach((v) => {
+            container.innerHTML += `
+          <div class="flex items-center justify-between p-3 border-b">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-user text-gray-500"></i>
+              </div>
+              <div>
+                <p class="font-medium">${v.name}</p>
+                <p class="text-sm text-gray-500">New ${v.role}</p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button
+                class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm approve-btn"
+                data-id="${v.id}"
+              >
+                Approve
+              </button>
+              <button
+                class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-sm reject-btn"
+                data-id="${v.id}"
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        `;
+          });
+
+          // Tambahkan aksi tombol approve dan reject
+          document.querySelectorAll(".approve-btn").forEach((btn) => {
+            btn.addEventListener("click", () =>
+              handleVerification(btn.dataset.id, "approved")
+            );
+          });
+
+          document.querySelectorAll(".reject-btn").forEach((btn) => {
+            btn.addEventListener("click", () =>
+              handleVerification(btn.dataset.id, "rejected")
+            );
+          });
+        });
+
+      function handleVerification(id, status) {
+        fetch(`http://localhost:3000/api/dashboard/admin/verify/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+        })
+          .then((res) => res.json())
+          .then(() => location.reload())
+          .catch((err) => console.error("Update verification error:", err));
+      }
+    </script>
+  </body>
+</html>

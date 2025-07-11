@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tugas - SMK LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .assignment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #e5e7eb;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        background-color: #4f46e5;
+        transition: width 0.3s ease;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        border-radius: 0.5rem;
+      }
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      .tab-active {
+        border-bottom: 3px solid #4f46e5;
+        color: #4f46e5;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-3 border-b border-indigo-600">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <h1 class="text-xl font-bold">SMKN 4 LMS</h1>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <div
+              id="guruProfile"
+              class="flex items-center space-x-3 p-3 bg-indigo-800 rounded-lg"
+            >
+              <!-- <img
+                src="https://ui-avatars.com/api/?name=Guru+SMK&background=8b5cf6&color=fff"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p class="font-medium">Guru SMK</p>
+                <p class="text-xs text-indigo-200">Pengajar</p>
+              </div> -->
+            </div>
+          </div>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="DashboardGuru.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a
+                href="GuruMapel.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-book"></i>
+                <span>Mata Pelajaran</span>
+              </a>
+            </li> -->
+            <li>
+              <a
+                href="GuruTugas.html"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-indigo-800"
+              >
+                <i class="fas fa-tasks"></i>
+                <span>Tugas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruDiskusi.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-comments"></i>
+                <span>Diskusi</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruPengaturan.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+              </a>
+            </li>
+            <div class="absolute bottom-4 left-4 right-4">
+              <button
+                id="logoutButton"
+                class="w-fit py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+              >
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </button>
+            </div>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <button id="sidebarToggle" class="md:hidden mr-4 text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h2 class="text-xl font-semibold text-gray-800">Tugas</h2>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <!-- Filter and Add Button -->
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4"
+          >
+            <button
+              class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center"
+            >
+              <i class="fas fa-plus mr-2"></i> Buat Tugas Baru
+            </button>
+          </div>
+
+          <!-- FORM TAMBAH TUGAS -->
+          <div
+            id="formTugasBaru"
+            class="hidden bg-white p-6 rounded-lg shadow-md mb-6"
+          >
+            <h2 class="text-xl font-semibold mb-4">Tambah Tugas Baru</h2>
+            <form id="tugasForm">
+              <input
+                type="text"
+                name="judul"
+                placeholder="Judul Tugas"
+                class="border p-2 w-full mb-3"
+                required
+              />
+              <textarea
+                name="deskripsi"
+                placeholder="Deskripsi"
+                class="border p-2 w-full mb-3"
+                required
+              ></textarea>
+              <input
+                type="date"
+                name="deadline"
+                class="border p-2 w-full mb-3"
+                required
+              />
+              <input
+                type="file"
+                name="file"
+                class="border p-2 w-full mb-3"
+                required
+              />
+
+              <label for="kelasSelect" class="block mb-1 font-medium"
+                >Pilih Kelas:</label
+              >
+              <label class="block mb-2 font-medium">Pilih Kelas:</label>
+              <div
+                id="kelasCheckboxContainer"
+                class="grid grid-cols-2 gap-2 mb-4"
+              >
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII TL 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII TL 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII TE 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII TE 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII TM 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII TM 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII TO 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII TO 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII TKR 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII TKR 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII TKJ 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII TKJ 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII AP 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII AP 1</span>
+                </label>
+                <label class="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="kelas[]"
+                    value="XII AK 1"
+                    class="form-checkbox text-indigo-600"
+                  />
+                  <span class="ml-2">XII AK 1</span>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+              >
+                Simpan Tugas
+              </button>
+            </form>
+          </div>
+
+          <!-- Tabs -->
+          <div class="mb-6 border-b border-gray-200">
+            <div class="flex space-x-8">
+              <button
+                id="allTab"
+                class="tab-active pb-3 px-1 text-sm font-medium"
+                onclick="filterAssignments('all')"
+              >
+                Semua Tugas
+              </button>
+              <button
+                id="ungradedTab"
+                class="pb-3 px-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                onclick="filterAssignments('ungraded')"
+              >
+                Belum Dinilai
+              </button>
+              <button
+                id="deadlineTab"
+                class="pb-3 px-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                onclick="filterAssignments('deadline')"
+              >
+                Deadline Mendekati
+              </button>
+              <button
+                id="completedTab"
+                class="pb-3 px-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+                onclick="filterAssignments('completed')"
+              >
+                Selesai
+              </button>
+            </div>
+          </div>
+
+          <!-- Assignment Cards -->
+          <div id="assignmentContainer" class="grid grid-cols-1 gap-6"></div>
+
+          <!-- Pagination -->
+          <div class="flex justify-center mt-8">
+            <nav class="inline-flex rounded-md shadow">
+              <a
+                href="#"
+                class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </a>
+              <a
+                href="#"
+                class="px-3 py-2 border-t border-b border-gray-300 bg-white text-indigo-600 font-medium"
+                >1</a
+              >
+              <a
+                href="#"
+                class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                >2</a
+              >
+              <a
+                href="#"
+                class="px-3 py-2 border-t border-b border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+                >3</a
+              >
+              <a
+                href="#"
+                class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </a>
+            </nav>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!-- Modal Detail Tugas -->
+    <div
+      id="modalDetailTugas"
+      class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50"
+    >
+      <div
+        id="modalDetailContent"
+        class="bg-white p-6 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+      >
+        <!-- konten detail tugas akan diisi lewat JS -->
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar for mobile
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("hidden");
+        });
+
+      // Tab switching functionality
+      const tabs = document.querySelectorAll(".border-b button");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", function () {
+          tabs.forEach((t) => t.classList.remove("tab-active"));
+          this.classList.add("tab-active");
+        });
+      });
+
+      // Assignment card hover effect
+      const assignmentCards = document.querySelectorAll(".assignment-card");
+      assignmentCards.forEach((card) => {
+        card.addEventListener("mouseenter", function () {
+          this.classList.add("shadow-md");
+        });
+        card.addEventListener("mouseleave", function () {
+          this.classList.remove("shadow-md");
+        });
+      });
+
+      // Filter assignments function
+      function filterAssignments(filterType) {
+        // Update active tab
+        document.querySelectorAll(".border-b button").forEach((btn) => {
+          btn.classList.remove("tab-active");
+          btn.classList.add("text-gray-500", "hover:text-gray-700");
+        });
+
+        const activeTab = document.getElementById(filterType + "Tab");
+        activeTab.classList.add("tab-active");
+        activeTab.classList.remove("text-gray-500", "hover:text-gray-700");
+
+        // Filter cards
+        const cards = document.querySelectorAll(".assignment-card");
+        const now = new Date();
+
+        cards.forEach((card) => {
+          const status = card.getAttribute("data-status");
+          const deadline = new Date(card.getAttribute("data-deadline"));
+          const graded = card.getAttribute("data-graded") === "true";
+          const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+
+          let showCard = false;
+
+          switch (filterType) {
+            case "all":
+              showCard = true;
+              break;
+            case "ungraded":
+              showCard = status === "completed" && !graded;
+              break;
+            case "deadline":
+              showCard = status === "active" && daysLeft <= 7;
+              break;
+            case "completed":
+              showCard = status === "completed";
+              break;
+          }
+
+          card.style.display = showCard ? "block" : "none";
+        });
+      }
+
+      async function fetchGuruProfile() {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) throw new Error("Token tidak ditemukan");
+
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!res.ok) throw new Error("Respon server gagal");
+
+          const data = await res.json();
+          const profileContainer = document.getElementById("guruProfile");
+
+          profileContainer.innerHTML = `
+              <img
+                src="${
+                  data.foto ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    data.name
+                  )}&background=8b5cf6&color=fff`
+                }"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p class="font-medium">${data.name}</p>
+                <p class="text-xs text-indigo-200">${data.email}</p>
+              </div>
+            `;
+        } catch (err) {
+          console.error("Gagal memuat profil guru:", err.message);
+        }
+      }
+      fetchGuruProfile();
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+          if (confirmLogout) {
+            // Hapus token login jika disimpan di localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("user"); // jika ada
+            // Redirect ke halaman login atau index.html
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+
+      const createTugas = async (req, res) => {
+        const guruId = req.user.id;
+        const { judul, deskripsi, deadline } = req.body;
+        const file = req.file;
+        const kelasRaw = req.body.kelas || req.body["kelas[]"];
+
+        const kelasArray = Array.isArray(kelasRaw) ? kelasRaw : [kelasRaw];
+
+        if (!file)
+          return res
+            .status(400)
+            .json({ message: "File tugas tidak ditemukan." });
+        if (!judul || !deskripsi || !deadline || kelasArray.length === 0) {
+          return res.status(400).json({ message: "Semua field wajib diisi." });
+        }
+
+        const filePath = `http://localhost:3000/uploadss/tugas/${file.filename}`;
+
+        try {
+          const [tugas] = await db.query(
+            `INSERT INTO tugas (judul, deskripsi, deadline, file_path, created_by) VALUES (?, ?, ?, ?, ?)`,
+            [judul, deskripsi, deadline, filePath, guruId]
+          );
+          const tugasId = tugas.insertId;
+
+          for (const kelas of kelasArray) {
+            const [k] = await db.query(
+              "SELECT id FROM kelas WHERE nama_kelas = ?",
+              [kelas]
+            );
+            if (k.length > 0) {
+              await db.query(
+                "INSERT INTO tugas_kelas (tugas_id, kelas_id) VALUES (?, ?)",
+                [tugasId, k[0].id]
+              );
+            }
+          }
+
+          res.json({ message: "Tugas berhasil dibuat." });
+        } catch (err) {
+          console.error("Gagal membuat tugas:", err);
+          res.status(500).json({ message: "Gagal membuat tugas." });
+        }
+      };
+
+      const getTugasGuru = async (req, res) => {
+        const guruId = req.user.id;
+        try {
+          const [rows] = await db.query(
+            `SELECT t.id, t.judul, t.deskripsi, t.deadline, t.created_at, t.file_path,
+              GROUP_CONCAT(k.nama_kelas SEPARATOR ', ') AS kelas,
+              COUNT(DISTINCT pt.id) AS jumlah_kumpul,
+              COUNT(DISTINCT sd.user_id) AS jumlah_siswa
+              FROM tugas t
+               JOIN tugas_kelas tk ON tk.tugas_id = t.id
+               JOIN kelas k ON k.id = tk.kelas_id
+               LEFT JOIN siswa_details sd ON sd.kelas_id = k.id
+               LEFT JOIN pengumpulan_tugas pt ON pt.tugas_id = t.id
+               WHERE t.created_by = ?
+              GROUP BY t.id
+              ORDER BY t.created_at DESC`,
+            [guruId]
+          );
+          res.json(rows);
+        } catch (err) {
+          console.error("Gagal ambil tugas guru:", err);
+          res.status(500).json({ message: "Gagal mengambil tugas." });
+        }
+      };
+
+      const tugasForm = document.getElementById("tugasForm");
+
+      tugasForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const formData = new FormData(tugasForm);
+        const tugasId = tugasForm.getAttribute("data-edit-id");
+        const isEdit = !!tugasId;
+
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/tugas${
+              isEdit ? `/${tugasId}` : ""
+            }`,
+            {
+              method: isEdit ? "PUT" : "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formData,
+            }
+          );
+
+          const result = await res.json();
+          if (res.ok) {
+            alert(
+              `✅ Tugas ${isEdit ? "diperbarui" : "berhasil ditambahkan"}!`
+            );
+            tugasForm.reset();
+            tugasForm.removeAttribute("data-edit-id");
+            formTugasBaru.classList.add("hidden");
+            tampilkanTugasGuru();
+          } else {
+            alert("❌ Gagal: " + result.message);
+          }
+        } catch (err) {
+          console.error("❌ Error:", err);
+          alert("Terjadi kesalahan saat menyimpan data.");
+        }
+      });
+
+      const tombolBuatTugas = document.querySelector(
+        "button.bg-indigo-600 i.fa-plus"
+      )?.parentElement;
+
+      const formTugasBaru = document.getElementById("formTugasBaru");
+
+      tombolBuatTugas?.addEventListener("click", () => {
+        formTugasBaru.classList.toggle("hidden");
+      });
+
+      window.onload = () => {
+        console.log("Halaman GuruTugas dimuat");
+      };
+
+      async function tampilkanTugasGuru() {
+        const container = document.getElementById("assignmentContainer");
+        const token = localStorage.getItem("token");
+
+        try {
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/tugas",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const tugasList = await res.json();
+          container.innerHTML = ""; // Kosongkan dulu
+
+          tugasList.forEach((tugas) => {
+            const card = document.createElement("div");
+            card.className =
+              "assignment-card bg-white rounded-xl shadow-sm p-6 transition-all duration-300";
+
+            // Hitung persentase pengumpulan
+            const total = tugas.jumlah_siswa || 0;
+            const submit = tugas.jumlah_kumpul || 0;
+            const persen = total === 0 ? 0 : Math.round((submit / total) * 100);
+
+            const deadline = new Date(tugas.deadline);
+            const hariSisa = Math.ceil(
+              (deadline.getTime() - new Date().getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+
+            card.innerHTML = `
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+              <i class="fas fa-file-alt text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-1">${
+                tugas.judul
+              }</h3>
+              <p class="text-sm text-gray-500">${tugas.kelas}</p>
+            </div>
+          </div>
+          <div class="dropdown relative inline-block text-left">
+             <button onclick="toggleDropdown(this)" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+              <i class="fas fa-ellipsis-v"></i>
+             </button>
+           <div class="dropdown-menu hidden absolute right-0 mt-2 w-36 bg-white rounded-md shadow-lg z-50">
+            <button onclick="editTugas(${
+              tugas.id
+            })" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</button>
+            <button onclick="hapusTugas(${
+              tugas.id
+            })" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hapus</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-sm text-gray-700 mb-3">${tugas.deskripsi}</p>
+          <div class="flex items-center text-sm text-gray-500 space-x-4">
+            <div class="flex items-center">
+              <i class="fas fa-calendar-day mr-1"></i>
+              <span>Dibuat: ${new Date(tugas.created_at).toLocaleDateString(
+                "id-ID"
+              )}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-clock mr-1"></i>
+              <span>Deadline: ${deadline.toLocaleDateString("id-ID")}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-file-alt mr-1"></i>
+              <span><a class="text-indigo-600" href="${
+                tugas.file_path
+              }" target="_blank" rel="noopener noreferrer">Lihat File</a></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="flex justify-between text-sm text-gray-600 mb-1">
+            <span>Progress Pengumpulan</span>
+            <span>${submit}/${total} (${persen}%)</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${persen}%;"></div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center">
+          <div class="flex space-x-2">
+            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Aktif</span>
+            <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">${hariSisa} Hari Lagi</span>
+          </div>
+          <a href="#" onclick="bukaDetailTugas(${
+            tugas.id
+          })" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center">
+            Lihat Detail <i class="fas fa-chevron-right ml-1 text-xs"></i>
+          </a>
+        </div>
+      `;
+
+            container.appendChild(card);
+          });
+        } catch (err) {
+          console.error("Gagal memuat tugas:", err);
+        }
+      }
+
+      window.onload = () => {
+        console.log("Halaman GuruTugas dimuat");
+        tampilkanTugasGuru(); // ✅ panggil saat load
+      };
+
+      async function hapusTugas(id) {
+        const konfirmasi = confirm(
+          "Apakah kamu yakin ingin menghapus tugas ini?"
+        );
+        if (!konfirmasi) return;
+
+        const token = localStorage.getItem("token");
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/tugas/${id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const result = await res.json();
+          if (res.ok) {
+            alert("✅ Tugas berhasil dihapus.");
+            tampilkanTugasGuru(); // refresh tampilan
+          } else {
+            alert("❌ Gagal hapus: " + result.message);
+          }
+        } catch (err) {
+          console.error("Error hapus tugas:", err);
+          alert("❌ Terjadi kesalahan saat menghapus.");
+        }
+      }
+
+      async function editTugas(id) {
+        const token = localStorage.getItem("token");
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/tugas/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const tugas = await res.json();
+          if (!res.ok)
+            throw new Error(tugas.message || "Gagal ambil data tugas");
+
+          // Tampilkan form
+          formTugasBaru.classList.remove("hidden");
+
+          // Isi form
+          document.querySelector('[name="judul"]').value = tugas.judul;
+          document.querySelector('[name="deskripsi"]').value = tugas.deskripsi;
+          document.querySelector('[name="deadline"]').value =
+            tugas.deadline.split("T")[0]; // hanya tanggal
+
+          // Cek checkbox kelas
+          const checkboxEls = document.querySelectorAll('[name="kelas[]"]');
+          checkboxEls.forEach((el) => {
+            el.checked = tugas.kelas.includes(el.value);
+          });
+
+          // Simpan ID di atribut form
+          tugasForm.setAttribute("data-edit-id", id);
+        } catch (err) {
+          console.error("Error ambil tugas:", err);
+          alert("❌ Gagal mengambil data tugas.");
+        }
+      }
+
+      function toggleDropdown(button) {
+        event.stopPropagation(); // Mencegah bubbling
+
+        const dropdown = button.closest(".dropdown");
+        const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+
+        // Tutup semua dropdown lain
+        document
+          .querySelectorAll(".dropdown-menu")
+          .forEach((el) => el.classList.add("hidden"));
+
+        // Toggle dropdown saat ini
+        dropdownMenu.classList.toggle("hidden");
+      }
+
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".dropdown")) {
+          document
+            .querySelectorAll(".dropdown-menu")
+            .forEach((el) => el.classList.add("hidden"));
+        }
+      });
+
+      async function bukaDetailTugas(tugasId) {
+        const token = localStorage.getItem("token");
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/tugas/${tugasId}/detail`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          const data = await res.json();
+          const modal = document.getElementById("modalDetailTugas");
+          const content = document.getElementById("modalDetailContent");
+
+          content.innerHTML = `
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Detail Tugas</h2>
+        <button onclick="document.getElementById('modalDetailTugas').classList.add('hidden')">
+          <i class="fas fa-times text-gray-600 hover:text-red-500 text-lg"></i>
+        </button>
+      </div>
+
+      <h3 class="text-md font-semibold text-green-700 mb-2">✅ Sudah Mengumpulkan</h3>
+      <ul class="mb-4 divide-y divide-gray-200">
+        ${data.sudah_kumpul
+          .map(
+            (s) => `
+          <li class="py-2 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+            <div>
+              <p class="text-gray-800 font-medium">${s.name} - ${s.kelas}</p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-2 items-center">
+              <a href="${
+                s.file_path.startsWith("http")
+                  ? s.file_path
+                  : `http://localhost:3000${s.file_path}`
+              }" target="_blank" class="text-indigo-600 text-sm underline">Lihat File</a>
+              <input type="number" min="0" max="100" value="${
+                s.nilai !== null ? s.nilai : ""
+              }" 
+                onchange="beriNilai(${tugasId}, ${s.id}, this.value)" 
+                class="w-20 border px-2 py-1 rounded text-sm"
+              />
+            </div>
+          </li>`
+          )
+          .join("")}
+      </ul>
+
+      <h3 class="text-md font-semibold text-red-700 mb-2">❌ Belum Mengumpulkan</h3>
+      <ul class="space-y-1 text-gray-700">
+        ${data.belum_kumpul
+          .map((s) => `<li>${s.name} - ${s.kelas}</li>`)
+          .join("")}
+      </ul>
+    `;
+
+          modal.classList.remove("hidden");
+        } catch (err) {
+          console.error("Gagal ambil detail tugas:", err);
+          alert("❌ Gagal ambil detail tugas.");
+        }
+      }
+
+      async function beriNilai(tugasId, siswaId, nilai) {
+        const token = localStorage.getItem("token");
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/tugas/${tugasId}/nilai/${siswaId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ nilai }),
+            }
+          );
+
+          if (res.ok) {
+            // ✅ Tambahkan ini agar muncul alert
+            alert("✅ Berhasil memberikan nilai");
+          } else {
+            alert("❌ Gagal memberikan nilai: " + data.message);
+          }
+        } catch (err) {
+          console.error("Gagal:", err);
+          alert("❌ Terjadi kesalahan saat memberikan nilai.");
+        }
+      }
+    </script>
+  </body>
+</html>

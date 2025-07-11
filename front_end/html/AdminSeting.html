@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMK LMS - Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar {
+        transition: all 0.3s ease;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          transform: translateX(-100%);
+          z-index: 50;
+          height: 100vh;
+        }
+      }
+      .toggle-checkbox:checked {
+        right: 0;
+        background-color: #6366f1;
+      }
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: #c7d2fe;
+      }
+      .toggle-label {
+        transition: all 0.3s ease;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .settings-card {
+        transition: all 0.3s ease;
+      }
+      .settings-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-800 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-2 border-b border-indigo-700">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <span class="text-xl font-bold">SMKN 4 LMS</span>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <p class="text-indigo-300 uppercase text-xs font-bold mb-2">
+              Main Menu
+            </p>
+            <a
+              href="DashboardAdmin.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg"
+            >
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="AdminSiswa.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-users"></i>
+              <span>Students</span>
+            </a>
+            <a
+              href="AdminGuru.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Teachers</span>
+            </a>
+            <a
+              href="AdminCourses.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-book"></i>
+              <span>Courses</span>
+            </a>
+            <a
+              href="AdminSeting.html"
+              class="flex items-center space-x-2 py-2 px-3 bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 overflow-auto">
+        <!-- Top Navigation -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-4">
+            <button id="sidebarToggle" class="md:hidden text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h1 class="text-xl font-bold text-gray-800">System Settings</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="relative"></div>
+            <div class="relative"></div>
+          </div>
+        </header>
+
+        <!-- Settings Content -->
+        <main class="p-6">
+          <!-- Settings Tabs -->
+          <div class="bg-white rounded-xl shadow-sm mb-6">
+            <div class="border-b border-gray-200">
+              <nav class="flex -mb-px">
+                <button
+                  id="general-tab"
+                  class="tab-button py-4 px-6 text-center border-b-2 font-medium text-sm border-indigo-500 text-indigo-600"
+                  onclick="openTab('general')"
+                >
+                  <i class="fas fa-cog mr-2"></i>General
+                </button>
+              </nav>
+            </div>
+
+            <!-- General Settings Tab -->
+            <div id="general" class="tab-content active p-6">
+              <div class="mb-8">
+                <h2 class="text-lg font-semibold mb-4">System Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div class="bg-gray-50 p-4 rounded-lg settings-card">
+                    <div class="flex items-center mb-3">
+                      <div class="bg-indigo-100 p-2 rounded-lg mr-3">
+                        <i class="fas fa-info-circle text-indigo-600"></i>
+                      </div>
+                      <h3 class="font-medium">Version</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">SMK LMS v2.4.1</p>
+                  </div>
+                  <div class="bg-gray-50 p-4 rounded-lg settings-card">
+                    <div class="flex items-center mb-3">
+                      <div class="bg-green-100 p-2 rounded-lg mr-3">
+                        <i class="fas fa-calendar-check text-green-600"></i>
+                      </div>
+                      <h3 class="font-medium">Last Updated</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">May 15, 2023</p>
+                  </div>
+                  <div class="bg-gray-50 p-4 rounded-lg settings-card">
+                    <div class="flex items-center mb-3">
+                      <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                        <i class="fas fa-database text-blue-600"></i>
+                      </div>
+                      <h3 class="font-medium">Database</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">MySQL 8.0</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 class="text-lg font-semibold mb-4">System Preferences</h2>
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="font-medium">Maintenance Mode</h3>
+                        <p class="text-sm text-gray-500">
+                          Enable to take the system offline for maintenance
+                        </p>
+                      </div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"
+                        ></div>
+                      </label>
+                    </div>
+                    <div class="border-t border-gray-200 pt-4"></div>
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="font-medium">Student Registration</h3>
+                        <p class="text-sm text-gray-500">
+                          Allow new students to register accounts
+                        </p>
+                      </div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" checked />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"
+                        ></div>
+                      </label>
+                    </div>
+                    <div class="border-t border-gray-200 pt-4"></div>
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="font-medium">Auto Backup</h3>
+                        <p class="text-sm text-gray-500">
+                          Enable automatic daily database backups
+                        </p>
+                      </div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" checked />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"
+                        ></div>
+                      </label>
+                    </div>
+                    <div class="border-t border-gray-200 pt-4"></div>
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h3 class="font-medium">System Notifications</h3>
+                        <p class="text-sm text-gray-500">
+                          Receive email notifications for system events
+                        </p>
+                      </div>
+                      <label
+                        class="relative inline-flex items-center cursor-pointer"
+                      >
+                        <input type="checkbox" class="sr-only peer" checked />
+                        <div
+                          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"
+                        ></div>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="mt-6 flex justify-end">
+                    <button
+                      class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      Save Preferences
+                    </button>
+                  </div>
+                  <button
+                    id="logoutButton"
+                    class="w-fit flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200"
+                  >
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Appearance Settings Tab -->
+            <div id="appearance" class="tab-content p-6"></div>
+
+            <!-- Notifications Settings Tab -->
+            <div id="notifications" class="tab-content p-6"></div>
+
+            <!-- Security Settings Tab -->
+            <div id="security" class="tab-content p-6"></div>
+
+            <!-- Advanced Settings Tab -->
+            <div id="advanced" class="tab-content p-6"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar on mobile
+      document
+        .getElementById("sidebarToggle")
+        .addEventListener("click", function () {
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
+
+      // Tab functionality
+      function openTab(tabName) {
+        // Hide all tab contents
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+          tabContents[i].classList.remove("active");
+        }
+
+        // Remove active class from all tab buttons
+        const tabButtons = document.getElementsByClassName("tab-button");
+        for (let i = 0; i < tabButtons.length; i++) {
+          tabButtons[i].classList.remove(
+            "border-indigo-500",
+            "text-indigo-600"
+          );
+          tabButtons[i].classList.add(
+            "border-transparent",
+            "text-gray-500",
+            "hover:text-gray-700",
+            "hover:border-gray-300"
+          );
+        }
+
+        // Show the current tab and add active class to button
+        document.getElementById(tabName).classList.add("active");
+        const activeTabButton = document.getElementById(tabName + "-tab");
+        activeTabButton.classList.remove(
+          "border-transparent",
+          "text-gray-500",
+          "hover:text-gray-700",
+          "hover:border-gray-300"
+        );
+        activeTabButton.classList.add("border-indigo-500", "text-indigo-600");
+      }
+
+      // Initialize tooltips
+      document.addEventListener("DOMContentLoaded", function () {
+        const tooltipTriggers = document.querySelectorAll("[data-tooltip]");
+
+        tooltipTriggers.forEach((trigger) => {
+          trigger.addEventListener("mouseenter", function () {
+            const tooltip = document.createElement("div");
+            tooltip.className =
+              "absolute z-10 w-auto p-2 text-sm text-white bg-gray-900 rounded-md shadow-lg";
+            tooltip.textContent = this.getAttribute("data-tooltip");
+
+            const rect = this.getBoundingClientRect();
+            tooltip.style.top = `${rect.top - 35}px`;
+            tooltip.style.left = `${
+              rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+            }px`;
+
+            this.appendChild(tooltip);
+
+            this.addEventListener("mouseleave", function () {
+              tooltip.remove();
+            });
+          });
+        });
+      });
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+          if (confirmLogout) {
+            // Hapus token login jika disimpan di localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("user"); // jika ada
+            // Redirect ke halaman login atau index.html
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+    </script>
+  </body>
+</html>

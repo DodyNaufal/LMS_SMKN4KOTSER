@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMK LMS - Teacher Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar {
+        transition: all 0.3s ease;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          transform: translateX(-100%);
+          z-index: 50;
+          height: 100vh;
+        }
+      }
+      .avatar {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      }
+      .status-active {
+        background-color: #ecfdf5;
+        color: #10b981;
+      }
+      .status-inactive {
+        background-color: #fef2f2;
+        color: #ef4444;
+      }
+      .subject-chip {
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-800 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-2 border-b border-indigo-700">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <span class="text-xl font-bold">SMKN 4 LMS</span>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <p class="text-indigo-300 uppercase text-xs font-bold mb-2">
+              Main Menu
+            </p>
+            <a
+              href="DashboardAdmin.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg"
+            >
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="AdminSiswa.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-users"></i>
+              <span>Students</span>
+            </a>
+            <a
+              href="AdminGuru.html"
+              class="flex items-center space-x-2 py-2 px-3 bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Teachers</span>
+            </a>
+            <a
+              href="AdminCourses.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-book"></i>
+              <span>Courses</span>
+            </a>
+            <a
+              href="AdminSeting.html"
+              class="flex items-center space-x-2 py-2 px-3 hover:bg-indigo-700 rounded-lg mt-1"
+            >
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 overflow-auto">
+        <!-- Top Navigation -->
+        <header
+          class="bg-white shadow-sm p-4 flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-4">
+            <button id="sidebarToggle" class="md:hidden text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h1 class="text-xl font-bold text-gray-800">Teacher Management</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <i
+                class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              ></i>
+              <input
+                type="text"
+                id="searchGuru"
+                placeholder="Search teachers..."
+                class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+        </header>
+
+        <!-- Teacher Content -->
+        <main class="p-6">
+          <!-- Teacher Actions -->
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4"
+          >
+            <div>
+              <h2 class="text-lg font-semibold text-gray-800">All Teachers</h2>
+              <p class="text-sm text-gray-500">
+                Manage all teacher accounts and information
+              </p>
+            </div>
+            <div class="flex space-x-3">
+              <button
+                class="btn-add-guru px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center space-x-2"
+              >
+                <i class="fas fa-plus"></i>
+                <span>Add New Teacher</span>
+              </button>
+              <button
+                id="filterGuruBtn"
+                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center space-x-2"
+              >
+                <i class="fas fa-filter"></i>
+                <span>Filters</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="filterPanel"
+            class="hidden relative bg-white border rounded-lg p-4 shadow-md mt-4 w-full max-w-md"
+          >
+            <!-- Tombol X di pojok kanan atas -->
+            <button
+              id="closeFilterPanel"
+              class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-lg font-bold"
+            >
+              &times;
+            </button>
+
+            <h4 class="font-semibold mb-4 mt-2">Filter Guru</h4>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="filterMapel" class="block text-sm">Mapel</label>
+                <input
+                  type="text"
+                  id="filterMapel"
+                  class="w-full border px-3 py-2 rounded"
+                />
+              </div>
+              <div>
+                <label for="filterKelas" class="block text-sm">Kelas</label>
+                <input
+                  type="text"
+                  id="filterKelas"
+                  class="w-full border px-3 py-2 rounded"
+                />
+              </div>
+            </div>
+            <div class="mt-4 text-right">
+              <button
+                id="applyFilterBtn"
+                class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+              >
+                Terapkan
+              </button>
+            </div>
+          </div>
+
+          <!-- Teacher Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div
+              class="bg-white rounded-xl shadow-sm p-4 card-hover transition-all duration-300"
+            >
+              <div class="flex justify-between">
+                <div>
+                  <p class="text-gray-500 text-sm">Total Teachers</p>
+                  <h3 class="text-2xl font-bold mt-1">
+                    <span id="total-guru-count">0</span>
+                  </h3>
+                </div>
+                <div class="bg-indigo-100 p-3 rounded-lg h-fit">
+                  <i class="fas fa-chalkboard-teacher text-indigo-600"></i>
+                </div>
+              </div>
+              <p class="text-green-500 text-xs mt-2">
+                <i class="fas fa-arrow-up"></i> 2.4% from last year
+              </p>
+            </div>
+          </div>
+
+          <!-- Teacher Table -->
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Teacher
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      NIP
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Mapel
+                    </th>
+
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="guru-table-body"
+                  class="bg-white divide-y divide-gray-200"
+                ></tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200"
+            >
+              <div class="flex-1 flex justify-between sm:hidden">
+                <a
+                  href="#"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Previous
+                </a>
+                <a
+                  href="#"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Next
+                </a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div
+      id="guruModal"
+      class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-8 relative transition-all duration-300 ease-in-out"
+      >
+        <!-- Tombol Tutup -->
+        <button
+          id="closeModal"
+          class="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Judul Modal -->
+        <h2
+          class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2"
+          id="modalTitle"
+        >
+          Detail Guru
+        </h2>
+
+        <!-- Formulir -->
+        <form id="guruForm" class="space-y-5">
+          <input type="hidden" id="guruId" />
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1"
+              >Nama</label
+            >
+            <input
+              type="text"
+              id="guruName"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="guruEmail"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div id="passwordGroup">
+            <label class="block text-sm font-medium text-gray-600 mb-1"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="guruPassword"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1"
+              >NIP</label
+            >
+            <input
+              type="text"
+              id="guruNip"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1"
+              >Mapel</label
+            >
+            <input
+              type="text"
+              id="guruMapel"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1"
+              >Kelas</label
+            >
+            <!-- <input
+              type="text"
+              id="guruKelas"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            /> -->
+            <select
+              id="guruKelas"
+              multiple
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="XII TL-1">XII TL-1</option>
+              <option value="XII TE-1">XII TE-1</option>
+              <option value="XII TM-1">XII TM-1</option>
+              <option value="XII TO-1">XII TO-1</option>
+              <option value="XII TKR-1">XII TKR-1</option>
+              <option value="XII TKJ-1">XII TKJ-1</option>
+              <option value="XII AK-1">XII AK-1</option>
+              <option value="XII AP-1">XII AP-1</option>
+            </select>
+            <small class="text-gray-400 text-xs"
+              >Gunakan Ctrl (atau Cmd) untuk pilih lebih dari satu</small
+            >
+          </div>
+
+          <!-- Tombol Simpan -->
+          <div class="flex justify-end pt-4">
+            <button
+              type="submit"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition-colors duration-200"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      document.getElementById("sidebarToggle").addEventListener("click", () => {
+        document.querySelector(".sidebar").classList.toggle("active");
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const countSpan = document.getElementById("total-guru-count");
+        const tbody = document.getElementById("guru-table-body");
+        const modal = document.getElementById("guruModal");
+        const form = document.getElementById("guruForm");
+        const closeModal = document.getElementById("closeModal");
+        const filterBtn = document.getElementById("filterGuruBtn");
+        const filterPanel = document.getElementById("filterPanel");
+        const closeFilterPanel = document.getElementById("closeFilterPanel");
+
+        // Ambil dan render data guru
+        function fetchTeachers(
+          url = "http://localhost:3000/api/dashboard/admin/teachers"
+        ) {
+          fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+              if (Array.isArray(data)) {
+                if (data.length === 0) {
+                  tbody.innerHTML =
+                    "<tr><td colspan='5' class='text-center p-4 text-gray-500'>Data tidak ditemukan.</td></tr>";
+                  countSpan.textContent = "0";
+                } else {
+                  renderTeacherTable(data);
+                  countSpan.textContent = data.length.toLocaleString();
+                }
+              } else {
+                console.error("Data guru tidak valid:", data);
+              }
+            })
+            .catch((err) => console.error("Gagal mengambil data guru:", err));
+        }
+
+        // Render data guru ke tabel
+        function renderTeacherTable(data) {
+          tbody.innerHTML = ""; // Hindari data double
+
+          data.forEach((teacher) => {
+            const initials = teacher.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase();
+            const mapelBadges = (teacher.mapel || "")
+              .split(",")
+              .map(
+                (m) =>
+                  `<span class="subject-chip bg-indigo-100 text-indigo-800">${m}</span>`
+              )
+              .join(" ");
+
+            const row = `
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <div class="avatar rounded-full h-10 w-10 flex items-center justify-center text-white font-bold">
+                        ${initials}
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">${
+                        teacher.name
+                      }</div>
+                      <div class="text-sm text-gray-500">${teacher.email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${
+                  teacher.nip || "-"
+                }</td>
+                <td class="px-6 py-4 whitespace-nowrap"><div class="flex flex-wrap gap-1">${mapelBadges}</div></td>
+                
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end space-x-2">
+                    <button class="btn-view text-indigo-600 hover:text-indigo-900" data-id="${
+                      teacher.id
+                    }"><i class="fas fa-eye"></i></button>
+                    <button class="btn-edit text-blue-600 hover:text-blue-900" data-id="${
+                      teacher.id
+                    }"><i class="fas fa-edit"></i></button>
+                    <button class="btn-delete text-red-600 hover:text-red-900" data-id="${
+                      teacher.id
+                    }"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                </td>
+              </tr>`;
+            tbody.innerHTML += row;
+          });
+        }
+
+        // Tambah guru
+        document
+          .querySelector(".btn-add-guru")
+          .addEventListener("click", () => {
+            form.reset();
+            document.getElementById("guruId").value = "";
+            modal.classList.remove("hidden");
+          });
+
+        // Tutup modal
+        closeModal.addEventListener("click", () =>
+          modal.classList.add("hidden")
+        );
+
+        // Simpan data guru (tambah/edit)
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const id = document.getElementById("guruId").value;
+          const payload = {
+            name: document.getElementById("guruName").value,
+            email: document.getElementById("guruEmail").value,
+            nip: document.getElementById("guruNip").value,
+            mapel: document.getElementById("guruMapel").value,
+            kelas: Array.from(
+              document.getElementById("guruKelas").selectedOptions
+            )
+              .map((opt) => opt.value)
+              .join(", "),
+          };
+
+          if (!id)
+            payload.password =
+              document.getElementById("guruPassword")?.value || "";
+
+          const method = id ? "PUT" : "POST";
+          const url = id
+            ? `http://localhost:3000/api/dashboard/admin/teachers/${id}`
+            : `http://localhost:3000/api/dashboard/admin/teachers`;
+
+          fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              alert(res.message);
+              modal.classList.add("hidden");
+              fetchTeachers();
+            })
+            .catch(() => alert("Gagal menyimpan data guru."));
+        });
+
+        // Aksi tombol View / Edit / Delete
+        document.addEventListener("click", (e) => {
+          const btn = e.target.closest(".btn-view, .btn-edit, .btn-delete");
+          if (!btn) return;
+
+          const id = btn.dataset.id;
+          if (!id) return;
+
+          if (
+            btn.classList.contains("btn-view") ||
+            btn.classList.contains("btn-edit")
+          ) {
+            fetch(`http://localhost:3000/api/dashboard/admin/teachers/${id}`)
+              .then((res) => res.json())
+              .then((data) => {
+                document.getElementById("guruId").value = data.id;
+                document.getElementById("guruName").value = data.name;
+                document.getElementById("guruEmail").value = data.email;
+                document.getElementById("guruNip").value = data.nip || "";
+                document.getElementById("guruMapel").value = data.mapel || "";
+
+                const kelasArray = (data.kelas || "")
+                  .split(",")
+                  .map((k) => k.trim());
+                Array.from(
+                  document.getElementById("guruKelas").options
+                ).forEach((opt) => {
+                  opt.selected = kelasArray.includes(opt.value);
+                });
+
+                const passwordGroup =
+                  document.getElementById("guruPassword")?.parentElement;
+                const simpanBtn = document.querySelector(
+                  "#guruForm button[type='submit']"
+                );
+                const inputs = document.querySelectorAll(
+                  "#guruForm input:not(#guruId)"
+                );
+
+                if (btn.classList.contains("btn-view")) {
+                  inputs.forEach((input) =>
+                    input.setAttribute("readonly", true)
+                  );
+                  passwordGroup?.classList.add("hidden");
+                  simpanBtn?.classList.add("hidden");
+                } else {
+                  inputs.forEach((input) => input.removeAttribute("readonly"));
+                  passwordGroup?.classList.add("hidden");
+                  simpanBtn?.classList.remove("hidden");
+                }
+
+                modal.classList.remove("hidden");
+              });
+          }
+
+          if (btn.classList.contains("btn-delete")) {
+            if (confirm("Yakin ingin menghapus data guru ini?")) {
+              fetch(
+                `http://localhost:3000/api/dashboard/admin/teachers/${id}`,
+                { method: "DELETE" }
+              )
+                .then((res) => res.json())
+                .then((res) => {
+                  alert(res.message);
+                  fetchTeachers();
+                });
+            }
+          }
+        });
+
+        // Pencarian guru
+        document
+          .getElementById("searchGuru")
+          .addEventListener("input", function () {
+            const keyword = this.value.trim();
+            if (!keyword) return fetchTeachers();
+
+            fetch(
+              `http://localhost:3000/api/dashboard/admin/teachers/search?keyword=${encodeURIComponent(
+                keyword
+              )}`
+            )
+              .then((res) => res.json())
+              .then((data) => renderTeacherTable(data))
+              .catch((err) =>
+                console.error("Gagal melakukan pencarian guru:", err)
+              );
+          });
+
+        // Filter
+        filterBtn.addEventListener("click", () =>
+          filterPanel.classList.remove("hidden")
+        );
+        closeFilterPanel.addEventListener("click", () =>
+          filterPanel.classList.add("hidden")
+        );
+
+        document
+          .getElementById("applyFilterBtn")
+          .addEventListener("click", () => {
+            const mapel = document.getElementById("filterMapel").value.trim();
+            const kelas = document.getElementById("filterKelas").value.trim();
+            const query = new URLSearchParams();
+
+            if (mapel) query.append("mapel", mapel);
+            if (kelas) query.append("kelas", kelas);
+
+            fetch(
+              `http://localhost:3000/api/dashboard/admin/teachers/filter?${query.toString()}`
+            )
+              .then((res) => res.json())
+              .then((data) => {
+                renderTeacherTable(data);
+                filterPanel.classList.add("hidden");
+              })
+              .catch((err) =>
+                console.error("Gagal menerapkan filter guru:", err)
+              );
+          });
+
+        // Muat data awal
+        fetchTeachers();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diskusi - SMK LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar (revisi sesuai GuruTugas.html) -->
+      <div class="sidebar bg-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-3 border-b border-indigo-600">
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <h1 class="text-xl font-bold">SMKN 4 LMS</h1>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <div
+              id="guruProfile"
+              class="flex items-center space-x-3 p-3 bg-indigo-800 rounded-lg"
+            ></div>
+          </div>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="DashboardGuru.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruTugas.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tasks"></i>
+                <span>Tugas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruDiskusi.html"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-indigo-800"
+              >
+                <i class="fas fa-comments"></i>
+                <span>Diskusi</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruPengaturan.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+              </a>
+            </li>
+            <div class="absolute bottom-4 left-4 right-4">
+              <button
+                id="logoutButton"
+                class="w-fit py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+              >
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </button>
+            </div>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm py-4 px-6 flex justify-between items-center"
+        >
+          <h1 class="text-2xl font-bold text-gray-800">Diskusi</h1>
+          <button
+            id="tambahDiskusiBtn"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+          >
+            Tambah Diskusi
+          </button>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <!-- Diskusi Card Placeholder -->
+
+          <!-- Tempat render diskusi dari backend -->
+          <div id="diskusiContainer" class="space-y-4"></div>
+        </main>
+        <!-- MODAL TAMBAH DISKUSI -->
+        <div
+          id="modalDiskusi"
+          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+        >
+          <div
+            class="bg-white rounded-lg shadow-lg w-full max-w-xl p-6 space-y-4"
+          >
+            <h2 class="text-xl font-bold">Buat Diskusi Baru</h2>
+            <input
+              type="text"
+              id="judulDiskusi"
+              placeholder="Judul diskusi"
+              class="w-full border border-gray-300 rounded-lg p-2"
+            />
+            <textarea
+              id="isiDiskusi"
+              placeholder="Isi diskusi"
+              class="w-full border border-gray-300 rounded-lg p-2"
+              rows="4"
+            ></textarea>
+            <div>
+              <p class="font-medium mb-2">Pilih Kelas:</p>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII TL 1" />
+                <span>XII TL 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII TE 1" />
+                <span>XII TE 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII TM 1" />
+                <span>XII TM 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII TO 1" />
+                <span>XII TO 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII TKR 1" />
+                <span>XII TKR 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII TKJ 1" />
+                <span>XII TKJ 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII AP 1" />
+                <span>XII AP 1</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" name="kelas[]" value="XII AK 1" />
+                <span>XII AK 1</span>
+              </label>
+            </div>
+            <div class="flex justify-end space-x-2">
+              <button
+                onclick="tutupModalDiskusi()"
+                class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+              >
+                Batal
+              </button>
+              <button
+                onclick="kirimDiskusi()"
+                class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700"
+              >
+                Kirim Diskusi
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          id="chatForumModal"
+          class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden flex items-center justify-center"
+        >
+          <div
+            class="bg-white w-full max-w-3xl mx-4 md:mx-auto rounded-xl shadow-xl p-6 relative flex flex-col"
+          >
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b pb-3">
+              <h2
+                id="judulDiskusiChat"
+                class="text-xl font-semibold text-gray-800"
+              >
+                Judul Diskusi
+              </h2>
+              <button
+                onclick="tutupForumChat()"
+                class="text-gray-500 hover:text-gray-700 transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            <!-- Chat Container -->
+            <div
+              id="chatContainer"
+              class="flex-1 overflow-y-auto mt-4 space-y-4 px-1 max-h-96 border rounded-lg p-4 bg-gray-100"
+            >
+              <!-- Chat messages akan dimuat di sini -->
+            </div>
+
+            <!-- Input Section -->
+            <div class="mt-4">
+              <textarea
+                id="inputChat"
+                rows="3"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Tulis pesan..."
+              ></textarea>
+              <div class="flex justify-end mt-2 gap-2">
+                <button
+                  onclick="tutupForumChat()"
+                  class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+                >
+                  Tutup
+                </button>
+                <button
+                  onclick="kirimChat()"
+                  class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                >
+                  Kirim
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ✅ DEKLARASI GLOBAL
+      let idDiskusiYangSedangDiedit = null;
+      let pollingInterval = null;
+      let forumTerbuka = false;
+
+      // ✅ LOGOUT
+      const logoutBtn = document.getElementById("logoutButton");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          if (confirm("Apakah Anda yakin ingin keluar?")) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+      }
+
+      // ✅ FETCH PROFIL GURU
+      async function fetchGuruProfile() {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+
+          document.getElementById("guruProfile").innerHTML = `
+      <img src="${
+        data.foto ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          data.name
+        )}&background=8b5cf6&color=fff`
+      }" alt="Profile" class="w-10 h-10 rounded-full" />
+      <div>
+        <p class="font-medium">${data.name}</p>
+        <p class="text-xs text-indigo-200">${data.email}</p>
+      </div>`;
+        } catch (err) {
+          console.error("Gagal memuat profil guru:", err);
+        }
+      }
+
+      // ✅ TAMPILKAN FORM TAMBAH DISKUSI BARU
+      function bukaFormDiskusiBaru() {
+        idDiskusiYangSedangDiedit = null;
+        document.getElementById("judulDiskusi").value = "";
+        document.getElementById("isiDiskusi").value = "";
+        document
+          .querySelectorAll("input[name='kelas[]']")
+          .forEach((el) => (el.checked = false));
+        document.getElementById("modalDiskusi").classList.remove("hidden");
+      }
+
+      document
+        .getElementById("tambahDiskusiBtn")
+        .addEventListener("click", bukaFormDiskusiBaru);
+
+      function tutupModalDiskusi() {
+        document.getElementById("modalDiskusi").classList.add("hidden");
+      }
+
+      // ✅ KIRIM / EDIT DISKUSI
+      async function kirimDiskusi() {
+        const token = localStorage.getItem("token");
+        const judul = document.getElementById("judulDiskusi").value;
+        const isi = document.getElementById("isiDiskusi").value;
+        const checkboxes = document.querySelectorAll(
+          "input[name='kelas[]']:checked"
+        );
+        const kelas = Array.from(checkboxes).map((c) => c.value);
+
+        if (!judul || !isi || kelas.length === 0) {
+          return alert("Lengkapi semua kolom dan pilih kelas.");
+        }
+
+        const method = idDiskusiYangSedangDiedit ? "PUT" : "POST";
+        const url = idDiskusiYangSedangDiedit
+          ? `http://localhost:3000/api/dashboard/guru/diskusi/${idDiskusiYangSedangDiedit}`
+          : "http://localhost:3000/api/dashboard/guru/diskusi";
+
+        try {
+          const res = await fetch(url, {
+            method,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ judul, isi, kelas }),
+          });
+
+          const result = await res.json();
+          alert(result.message);
+          tutupModalDiskusi();
+          fetchDiskusiGuru();
+          idDiskusiYangSedangDiedit = null;
+        } catch (err) {
+          console.error("Gagal kirim diskusi:", err);
+        }
+      }
+
+      // ✅ FETCH SEMUA DISKUSI GURU
+      async function fetchDiskusiGuru() {
+        const token = localStorage.getItem("token");
+
+        try {
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/guru/diskusi",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const data = await res.json();
+          const container = document.getElementById("diskusiContainer");
+          container.innerHTML = "";
+
+          if (data.length === 0) {
+            container.innerHTML = `<p class="text-gray-500">Belum ada diskusi.</p>`;
+            return;
+          }
+
+          data.forEach((diskusi) => {
+            container.innerHTML += `
+        <div class="bg-white p-6 rounded-xl shadow-md relative group">
+          <div class="absolute top-4 right-4">
+            <button onclick="toggleMenu(${diskusi.id})" class="text-gray-500 hover:text-gray-700">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div id="menu-${diskusi.id}" class="hidden absolute right-0 mt-2 w-28 bg-white border rounded shadow-lg z-50">
+              <button onclick="editDiskusi(${diskusi.id})" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Edit</button>
+              <button onclick="hapusDiskusi(${diskusi.id})" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Hapus</button>
+            </div>
+          </div>
+          <h3 class="text-lg font-bold text-gray-800">${diskusi.judul}</h3>
+          <p class="text-sm text-gray-600 mt-2">${diskusi.isi}</p>
+          <div class="flex justify-between items-center mt-4">
+            <div class="flex space-x-6 text-sm text-gray-500">
+              <div>Diposting oleh: <span class="text-gray-700 font-medium">${diskusi.guru}</span></div>
+              <div>Kelas: <span class="text-gray-700 font-medium">${diskusi.kelas}</span></div>
+            </div>
+            <button onclick="bukaForumChat(${diskusi.id}, '${diskusi.judul}')" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Lihat Diskusi</button>
+          </div>
+        </div>`;
+          });
+        } catch (err) {
+          console.error("Gagal fetch diskusi:", err);
+        }
+      }
+
+      // ✅ EDIT DISKUSI
+      async function editDiskusi(id) {
+        const token = localStorage.getItem("token");
+
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/diskusi/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const diskusi = await res.json();
+
+          document.getElementById("judulDiskusi").value = diskusi.judul;
+          document.getElementById("isiDiskusi").value = diskusi.isi;
+          document.querySelectorAll("input[name='kelas[]']").forEach((el) => {
+            el.checked = diskusi.kelas.includes(el.value);
+          });
+
+          idDiskusiYangSedangDiedit = id;
+          document.getElementById("modalDiskusi").classList.remove("hidden");
+        } catch (err) {
+          console.error("Gagal ambil data diskusi:", err);
+        }
+      }
+
+      // ✅ HAPUS DISKUSI
+      async function hapusDiskusi(id) {
+        if (!confirm("Yakin ingin menghapus diskusi ini?")) return;
+
+        const token = localStorage.getItem("token");
+
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/dashboard/guru/diskusi/${id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const result = await res.json();
+          alert(result.message);
+          fetchDiskusiGuru();
+        } catch (err) {
+          console.error("Gagal hapus diskusi:", err);
+        }
+      }
+
+      // ✅ TOGGLE MENU TITIK 3
+      function toggleMenu(id) {
+        const menu = document.getElementById(`menu-${id}`);
+        document.querySelectorAll("[id^='menu-']").forEach((el) => {
+          if (el.id !== `menu-${id}`) el.classList.add("hidden");
+        });
+        menu.classList.toggle("hidden");
+      }
+
+      // ✅ AUTO CLOSE MENU JIKA KLIK DI LUAR
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest(".group")) {
+          document
+            .querySelectorAll("[id^='menu-']")
+            .forEach((el) => el.classList.add("hidden"));
+        }
+      });
+
+      // ✅ INITIAL LOAD
+      window.onload = () => {
+        fetchGuruProfile();
+        fetchDiskusiGuru();
+      };
+
+      let diskusiAktifId = null;
+
+      async function bukaForumChat(id, judul) {
+        diskusiAktifId = id;
+        forumTerbuka = true;
+        document.getElementById("judulDiskusiChat").innerText = judul;
+        document.getElementById("chatForumModal").classList.remove("hidden");
+        await loadChat();
+
+        // Mulai polling setiap 3 detik
+        pollingInterval = setInterval(() => {
+          if (forumTerbuka) loadChat();
+        }, 3000);
+      }
+
+      function tutupForumChat() {
+        forumTerbuka = false;
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+
+        document.getElementById("chatForumModal").classList.add("hidden");
+        document.getElementById("chatContainer").innerHTML = "";
+        document.getElementById("inputChat").value = "";
+      }
+
+      async function loadChat() {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const chat = await res.json();
+        const container = document.getElementById("chatContainer");
+        container.innerHTML = "";
+        chat.forEach((msg) => {
+          container.innerHTML += `
+      <div class="bg-white border p-2 rounded shadow-sm">
+        <p class="text-sm font-semibold">${msg.name} <span class="text-xs text-gray-500">(${msg.role})</span></p>
+        <p class="text-gray-700">${msg.isi}</p>
+      </div>
+    `;
+        });
+      }
+
+      async function kirimChat() {
+        const token = localStorage.getItem("token");
+        const isi = document.getElementById("inputChat").value.trim();
+        if (!isi) return;
+
+        await fetch(
+          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ isi }),
+          }
+        );
+
+        document.getElementById("inputChat").value = "";
+        await loadChat();
+      }
+    </script>
+  </body>
+</html>

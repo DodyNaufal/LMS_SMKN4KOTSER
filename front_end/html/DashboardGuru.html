@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Guru SMK - LMS</title>
+    <link rel="stylesheet" href="../css/DashboardGuru.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="sidebar bg-indigo-700 text-white w-64 flex-shrink-0">
+        <div class="p-4 flex items-center space-x-3 border-b border-indigo-600">
+          <!-- <i class="fas fa-graduation-cap text-2xl"></i> -->
+          <img
+            src="../asset/smkn_4.png"
+            alt=""
+            class="w-10 h-10 rounded-full"
+          />
+          <h1 class="text-xl font-bold">SMKN 4 LMS</h1>
+        </div>
+        <nav class="p-4">
+          <div class="mb-6">
+            <div
+              id="guruProfile"
+              class="flex items-center space-x-3 p-3 bg-indigo-800 rounded-lg"
+            >
+              <!-- <img
+                src="https://ui-avatars.com/api/?name=Guru+SMK&background=8b5cf6&color=fff"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              /> -->
+              <!-- <div>
+                <p class="font-medium">Guru SMK</p>
+                <p class="text-xs text-indigo-200">Pengajar</p>
+              </div> -->
+            </div>
+          </div>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="DashboardGuru.html"
+                class="flex items-center space-x-3 p-3 rounded-lg bg-indigo-800"
+              >
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <!-- <li>
+              <a
+                href="GuruMapel.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-book"></i>
+                <span>Mata Pelajaran</span>
+              </a>
+            </li> -->
+            <li>
+              <a
+                href="GuruTugas.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-tasks"></i>
+                <span>Tugas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruDiskusi.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-comments"></i>
+                <span>Diskusi</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="GuruPengaturan.html"
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-indigo-800"
+              >
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+              </a>
+            </li>
+            <div class="absolute bottom-4 left-4 right-4">
+              <button
+                id="logoutButton"
+                class="w-fit py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+              >
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+              </button>
+            </div>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header
+          class="bg-white shadow-sm p-4 flex items-center justify-between"
+        >
+          <div class="flex items-center">
+            <button id="sidebarToggle" class="md:hidden mr-4 text-gray-600">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h2 class="text-xl font-semibold text-gray-800">Dashboard Guru</h2>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <!-- Stats Cards -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
+          >
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500">Mata Pelajaran</p>
+                  <h3
+                    id="totalMapelGuru"
+                    class="text-2xl font-bold text-indigo-600"
+                  >
+                    0
+                  </h3>
+                </div>
+                <div class="bg-indigo-100 p-3 rounded-lg">
+                  <i class="fas fa-book text-indigo-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500">Total Siswa</p>
+                  <h3 id="totalSiswa" class="text-2xl font-bold text-blue-600">
+                    0
+                  </h3>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-lg">
+                  <i class="fas fa-users text-blue-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500">Tugas Belum Dinilai</p>
+                  <h3 class="text-2xl font-bold text-yellow-600">8</h3>
+                </div>
+                <div class="bg-yellow-100 p-3 rounded-lg">
+                  <i class="fas fa-clipboard-check text-yellow-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white rounded-xl shadow-sm p-6 card-hover transition-all duration-300"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-gray-500">Rata-rata Nilai</p>
+                  <h3 class="text-2xl font-bold text-green-600">78.5</h3>
+                </div>
+                <div class="bg-green-100 p-3 rounded-lg">
+                  <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Content Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Mata Pelajaran & Siswa -->
+            <div class="lg:col-span-2">
+              <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-semibold text-gray-800">
+                    Mata Pelajaran yang Diajarkan
+                  </h3>
+                  <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Cari mapel/jurusan"
+                    class="px-3 py-2 rounded-lg text-sm w-64 bg-gray-200 text-gray-800 placeholder-gray-500 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Mata Pelajaran
+                        </th>
+                        <th
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Jurusan
+                        </th>
+                        <th
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Jumlah Siswa
+                        </th>
+                        <!-- <th
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Rata-rata Nilai
+                        </th> -->
+                        <th
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        ></th>
+                      </tr>
+                    </thead>
+                    <tbody
+                      id="mapelTableBody"
+                      class="bg-white divide-y divide-gray-200"
+                    ></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Materi -->
+            <form id="uploadForm" enctype="multipart/form-data">
+              <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                  Unggah Materi Baru
+                </h3>
+
+                <label
+                  class="upload-area block rounded-lg p-8 text-center cursor-pointer mb-4 bg-gray-100 border-dashed border-2 border-gray-300"
+                >
+                  <i
+                    class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"
+                  ></i>
+                  <p class="text-gray-500">
+                    Seret file ke sini atau klik untuk mengunggah
+                  </p>
+                  <p class="text-xs text-gray-400 mt-2">
+                    PDF, DOCX, PNG, JPG (Maks. 10MB)
+                  </p>
+                  <input
+                    type="file"
+                    name="file"
+                    accept=".pdf,.docx,.png,.jpg"
+                    class="hidden"
+                    required
+                  />
+                </label>
+
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Judul Materi</label
+                    >
+                    <input
+                      name="name"
+                      type="text"
+                      required
+                      class="w-full bg-gray-100 rounded-lg px-4 py-2"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                      >Deskripsi</label
+                    >
+                    <input
+                      name="description"
+                      type="text"
+                      class="w-full bg-gray-100 rounded-lg px-4 py-2"
+                    />
+                  </div>
+
+                  <div
+                    class="grid grid-cols-2 gap-2 bg-gray-100 rounded-lg p-4"
+                  >
+                    <!-- Kelas checkbox -->
+                    <!-- contoh -->
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII TL 1"
+                        class="mr-2"
+                      />
+                      XII TL 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII TE 1"
+                        class="mr-2"
+                      />
+                      XII TE 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII TM 1"
+                        class="mr-2"
+                      />
+                      XII TM 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII TO 1"
+                        class="mr-2"
+                      />
+                      XII TO 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII TKR 1"
+                        class="mr-2"
+                      />
+                      XII TKR 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII TKJ 1"
+                        class="mr-2"
+                      />
+                      XII TKJ 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII AP 1"
+                        class="mr-2"
+                      />
+                      XII AP 1
+                    </label>
+                    <label class="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="kelas[]"
+                        value="XII AK 1"
+                        class="mr-2"
+                      />
+                      XII AK 1
+                    </label>
+                    <!-- tambahkan kelas lainnya di sini -->
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+                  >
+                    <i class="fas fa-upload mr-2"></i> Unggah Materi
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Recent Announcements -->
+          <div class="mt-6"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal Siswa -->
+    <div
+      id="modalSiswa"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Daftar Siswa</h2>
+        <ul
+          id="modalSiswaList"
+          class="space-y-2 max-h-80 overflow-y-auto text-sm text-gray-700"
+        ></ul>
+        <div class="mt-4 text-right">
+          <button
+            onclick="tutupModal()"
+            class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function bukaModal(kelas) {
+        const token = localStorage.getItem("token");
+        const modal = document.getElementById("modalSiswa");
+        const list = document.getElementById("modalSiswaList");
+
+        modal.classList.remove("hidden");
+        list.innerHTML = `<li class="text-gray-400">Memuat data...</li>`;
+
+        fetch(
+          `http://localhost:3000/api/dashboard/guru/dashboard/kelas/${encodeURIComponent(
+            kelas
+          )}/students`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            list.innerHTML = "";
+            if (data.length === 0) {
+              list.innerHTML =
+                "<li class='text-gray-500'>Tidak ada siswa.</li>";
+              return;
+            }
+
+            data.forEach((siswa) => {
+              const item = document.createElement("li");
+              item.innerHTML = `<strong>${siswa.name}</strong> (${siswa.nisn}) - ${siswa.jurusan}`;
+              list.appendChild(item);
+            });
+          })
+          .catch((err) => {
+            list.innerHTML = `<li class="text-red-500">Gagal memuat data siswa.</li>`;
+          });
+      }
+
+      function tutupModal() {
+        document.getElementById("modalSiswa").classList.add("hidden");
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle sidebar on mobile
+        const sidebarToggle = document.getElementById("sidebarToggle");
+        if (sidebarToggle) {
+          sidebarToggle.addEventListener("click", function () {
+            document.querySelector(".sidebar").classList.toggle("active");
+          });
+        }
+
+        // Interaksi klik area upload
+        // Interaksi klik area upload
+        const uploadArea = document.querySelector(".upload-area");
+        if (uploadArea) {
+          uploadArea.addEventListener("click", function () {
+            const fileInput = uploadArea.querySelector('input[type="file"]');
+            if (fileInput) fileInput.click();
+          });
+        }
+
+        // Ambil statistik course guru
+        async function fetchCoursesStats() {
+          try {
+            const res = await fetch(
+              "http://localhost:3000/api/dashboard/admin/courses/stats"
+            );
+            const data = await res.json();
+            document.querySelector("#totalMapelGuru").textContent = data.total;
+          } catch (error) {
+            console.error("Gagal mengambil data mata pelajaran:", error);
+          }
+        }
+
+        // Ambil profil guru login
+        async function fetchGuruProfile() {
+          try {
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("Token tidak ditemukan");
+
+            const res = await fetch(
+              "http://localhost:3000/api/dashboard/guru/profile",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            if (!res.ok) throw new Error("Respon server gagal");
+
+            const data = await res.json();
+            const profileContainer = document.getElementById("guruProfile");
+
+            profileContainer.innerHTML = `
+              <img
+                src="${
+                  data.foto ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    data.name
+                  )}&background=8b5cf6&color=fff`
+                }"
+                alt="Profile"
+                class="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p class="font-medium">${data.name}</p>
+                <p class="text-xs text-indigo-200">${data.email}</p>
+              </div>
+            `;
+          } catch (err) {
+            console.error("Gagal memuat profil guru:", err.message);
+          }
+        }
+
+        // Ambil statistik dashboard guru
+        async function fetchDashboardStats() {
+          try {
+            const token = localStorage.getItem("token");
+            const res = await fetch(
+              "http://localhost:3000/api/dashboard/guru/dashboard/stats",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const data = await res.json();
+            document.getElementById("totalMapelGuru").textContent =
+              data.totalMapel;
+            document.getElementById("totalSiswa").textContent = data.totalSiswa;
+          } catch (err) {
+            console.error("Gagal fetch dashboard guru:", err);
+          }
+        }
+
+        async function fetchGuruCoursesTable() {
+          try {
+            const token = localStorage.getItem("token");
+            const res = await fetch(
+              "http://localhost:3000/api/dashboard/guru/dashboard/courses",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            const data = await res.json();
+            const tbody = document.getElementById("mapelTableBody");
+            tbody.innerHTML = ""; // kosongkan isi tabel
+
+            const keyword =
+              document.getElementById("searchInput")?.value.toLowerCase() || "";
+
+            const filtered = data.filter(
+              (item) =>
+                item.course_name.toLowerCase().includes(keyword) ||
+                item.jurusan.toLowerCase().includes(keyword)
+            );
+
+            if (filtered.length === 0) {
+              tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="px-6 py-4 text-center text-gray-400">
+              Tidak ada data yang sesuai.
+            </td>
+          </tr>`;
+              return;
+            }
+
+            filtered.forEach((item) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="font-medium text-gray-900">${item.course_name}</div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+            ${item.jurusan}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-gray-500">
+            ${item.jumlah_siswa}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <button 
+              onclick="bukaModal('${item.jurusan}')"
+              class="text-indigo-600 hover:text-indigo-900"
+            >
+              Detail
+            </button>
+          </td>
+        `;
+              tbody.appendChild(row);
+            });
+          } catch (err) {
+            console.error("Gagal ambil daftar mata pelajaran:", err);
+          }
+        }
+
+        // Panggil ulang saat input search berubah
+        document
+          .getElementById("searchInput")
+          ?.addEventListener("input", fetchGuruCoursesTable);
+
+        // Panggil saat DOM siap
+        fetchCoursesStats();
+        fetchGuruProfile();
+        fetchDashboardStats();
+        fetchGuruCoursesTable();
+      });
+
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const form = e.target;
+          const token = localStorage.getItem("token");
+          const formData = new FormData(form);
+
+          // ✅ Cari semua checkbox kelas yang diceklis
+          const checked = form.querySelectorAll(
+            'input[name="kelas[]"]:checked'
+          );
+
+          // ✅ Debug: Tampilkan semua kelas yang dicentang
+          checked.forEach((el) => {
+            console.log("✔️ Kelas dicentang:", el.value);
+          });
+
+          // ❗ Hapus data kelas[] lama (jaga-jaga)
+          formData.delete("kelas[]");
+
+          // ❗ Validasi: pastikan minimal satu kelas dipilih
+          if (checked.length === 0) {
+            alert("Pilih minimal satu kelas.");
+            return;
+          }
+
+          // ✅ Tambahkan ulang data kelas[] secara manual ke formData
+          checked.forEach((el) => {
+            formData.append("kelas[]", el.value);
+          });
+
+          // 🔍 Debug: tampilkan semua isi formData
+          for (let [key, value] of formData.entries()) {
+            console.log(key, ":", value);
+          }
+
+          try {
+            const res = await fetch(
+              "http://localhost:3000/api/dashboard/guru/courses",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+                body: formData,
+              }
+            );
+
+            const result = await res.json();
+
+            if (!res.ok) {
+              throw new Error(result.message || "Gagal upload");
+            }
+
+            alert(result.message);
+            form.reset();
+          } catch (err) {
+            console.error("Upload error:", err);
+            alert("Upload gagal: " + err.message);
+          }
+        });
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+          if (confirmLogout) {
+            // Hapus token login jika disimpan di localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("user"); // jika ada
+            // Redirect ke halaman login atau index.html
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+    </script>
+  </body>
+</html>

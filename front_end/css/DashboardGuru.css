@@ -1,0 +1,25 @@
+.sidebar {
+  transition: all 0.3s;
+}
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.upload-area {
+  border: 2px dashed #ccc;
+  transition: all 0.3s;
+}
+.upload-area:hover {
+  border-color: #4f46e5;
+  background-color: #f8fafc;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    z-index: 100;
+    left: -100%;
+  }
+  .sidebar.active {
+    left: 0;
+  }
+}

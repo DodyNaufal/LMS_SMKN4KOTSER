@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Learning Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .progress-ring__circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+      .sidebar {
+        transition: all 0.3s ease;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.active {
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans">
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobileMenuButton"
+      class="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-lg"
+    >
+      <i class="fas fa-bars text-gray-700 text-xl"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div
+      id="sidebar"
+      class="sidebar fixed top-0 left-0 h-full w-64 bg-indigo-800 text-white p-4 shadow-lg"
+    >
+      <div class="flex items-center justify mb-8">
+        <img src="../asset/smkn_4.png" alt="" class="w-10 h-10 rounded-full" />
+        <span class="text-xl font-bold">SMKN 4 LMS</span>
+        <button id="closeSidebar" class="md:hidden">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div
+        id="siswaProfile"
+        class="flex items-center space-x-3 mb-8 p-2 bg-indigo-700 rounded-lg"
+      >
+        <!-- <img
+          src="https://randomuser.me/api/portraits/lego/5.jpg"
+          alt="Student"
+          class="w-10 h-10 rounded-full"
+        />
+        <div>
+          <p class="font-medium">John Student</p>
+          <p class="text-xs text-indigo-200">Grade 12</p>
+        </div> -->
+      </div>
+
+      <nav class="space-y-2">
+        <a
+          href="DashboardSiswa.html"
+          class="block py-2 px-3 rounded-lg bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-book-open mr-3"></i> My Courses
+        </a>
+        <a
+          href="SiswaAssisgement.html"
+          class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-file-alt mr-3"></i> Assignments
+        </a>
+        <a
+          href="SiswaDiscusions.html"
+          class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-comments mr-3"></i> Discussions
+        </a>
+        <a
+          href="SiswaSettings.html"
+          class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-cog mr-3"></i> Settings
+        </a>
+      </nav>
+
+      <div class="absolute bottom-4 left-4 right-4">
+        <button
+          id="logoutButton"
+          class="w-full py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+        >
+          <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+      <!-- Header -->
+      <header class="bg-white shadow-sm py-4 px-6">
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-800">My Learning</h1>
+          <div class="flex items-center space-x-4">
+            <div class="relative"></div>
+            <div class="relative"></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="p-6">
+        <!-- Welcome Banner -->
+        <div
+          class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mb-8 text-white"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-center"
+          >
+            <div>
+              <h2 class="text-2xl font-bold mb-2">
+                Welcome , <span id="namaSiswa">...</span>!
+              </h2>
+
+              <p class="opacity-90">Semangat untuk belajar dan meraih mimpi.</p>
+            </div>
+            <button
+              class="mt-4 md:mt-0 bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition"
+            >
+              View All Courses
+            </button>
+          </div>
+        </div>
+
+        <!-- Courses Section -->
+        <section class="mb-10">
+          <div
+            id="courseContainer"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          ></div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById("mobileMenuButton");
+      const closeSidebar = document.getElementById("closeSidebar");
+      const sidebar = document.getElementById("sidebar");
+
+      mobileMenuButton.addEventListener("click", () => {
+        sidebar.classList.add("active");
+      });
+
+      closeSidebar.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", (e) => {
+        if (
+          window.innerWidth <= 768 &&
+          !sidebar.contains(e.target) &&
+          e.target !== mobileMenuButton
+        ) {
+          sidebar.classList.remove("active");
+        }
+      });
+
+      // Sample data for demonstration
+      const courses = [
+        {
+          title: "Advanced Mathematics",
+          progress: 65,
+          dueDate: "Oct 15",
+          lessonsCompleted: 12,
+          totalLessons: 20,
+          status: "Active",
+          rating: 4.8,
+        },
+        {
+          title: "Modern Physics",
+          progress: 30,
+          dueDate: "Nov 5",
+          lessonsCompleted: 6,
+          totalLessons: 20,
+          status: "New",
+          rating: 4.9,
+        },
+        {
+          title: "World Literature",
+          progress: 80,
+          dueDate: "Sep 28",
+          lessonsCompleted: 16,
+          totalLessons: 20,
+          status: "Popular",
+          rating: 4.7,
+        },
+      ];
+
+      // You can use this data to dynamically populate elements if needed
+      console.log("Courses data:", courses);
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+          if (confirmLogout) {
+            // Hapus token login jika disimpan di localStorage
+            localStorage.removeItem("token");
+            localStorage.removeItem("user"); // jika ada
+            // Redirect ke halaman login atau index.html
+            window.location.href = "http://127.0.0.1:5500/front_end/index.html";
+          }
+        });
+
+      async function fetchSiswaProfile() {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) throw new Error("Token tidak ditemukan");
+
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/siswa/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!res.ok) throw new Error("Respon server gagal");
+
+          const data = await res.json();
+          const namaTarget = document.getElementById("namaSiswa");
+          if (namaTarget) {
+            namaTarget.textContent = data.name;
+          }
+          const profileContainer = document.getElementById("siswaProfile");
+
+          profileContainer.innerHTML = `
+        <img
+          src="${
+            data.foto ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              data.name
+            )}&background=8b5cf6&color=fff`
+          }"
+          alt="Student"
+          class="w-10 h-10 rounded-full"
+        />
+        <div>
+          <p class="font-medium">${data.name}</p>
+          <p class="text-xs text-indigo-200">${data.kelas || data.email}</p>
+        </div>
+      `;
+        } catch (err) {
+          console.error("Gagal memuat profil siswa:", err.message);
+        }
+      }
+
+      fetchSiswaProfile();
+
+      async function loadMateriSiswa() {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await fetch(
+            "http://localhost:3000/api/dashboard/siswa/materi",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await res.json();
+
+          const container = document.getElementById("courseContainer");
+          container.innerHTML = "";
+
+          data.forEach((course) => {
+            container.innerHTML += `
+          <div class="course-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+            <div class="p-5">
+              <h3 class="text-lg font-bold text-gray-800 mb-2">${course.name}</h3>
+              <p class="text-sm text-gray-600 mb-2">${course.description}</p>
+              <p class="text-xs text-gray-500 mb-2">Dibuat oleh: ${course.guru}</p>
+              <a href="http://localhost:3000${course.file_path}" 
+                class="inline-block mt-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm">
+                Lihat Materi
+              </a>
+            </div>
+          </div>`;
+          });
+        } catch (err) {
+          console.error("Gagal load materi siswa:", err);
+        }
+      }
+
+      window.onload = loadMateriSiswa;
+    </script>
+  </body>
+</html>

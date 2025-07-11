@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SMK 4 LMS - Discussions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .discussion-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar {
+        transition: all 0.3s ease;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.active {
+          transform: translateX(0);
+        }
+      }
+      .active-tab {
+        border-bottom: 3px solid #4f46e5;
+        color: #4f46e5;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans">
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobileMenuButton"
+      class="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-lg shadow-lg"
+    >
+      <i class="fas fa-bars text-gray-700 text-xl"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div
+      id="sidebar"
+      class="sidebar fixed top-0 left-0 h-full w-64 bg-indigo-800 text-white p-4 shadow-lg"
+    >
+      <div class="flex items-center mb-8">
+        <img src="../asset/smkn_4.png" alt="" class="w-10 h-10 rounded-full" />
+        <span class="text-xl font-bold">SMKN 4 LMS</span>
+        <button id="closeSidebar" class="md:hidden">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+
+      <div
+        id="siswaProfile"
+        class="flex items-center space-x-3 mb-8 p-2 bg-indigo-700 rounded-lg"
+      ></div>
+
+      <nav class="space-y-2">
+        <a
+          href="DashboardSiswa.html"
+          class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-book-open mr-3"></i> My Courses
+        </a>
+        <a
+          href="SiswaAssisgement.html"
+          class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-file-alt mr-3"></i> Assignments
+        </a>
+        <a
+          href="SiswaDiscusions.html"
+          class="block py-2 px-3 rounded-lg bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-comments mr-3"></i> Discussions
+        </a>
+        <a
+          href="SiswaSettings.html"
+          class="block py-2 px-3 rounded-lg hover:bg-indigo-700 transition flex items-center"
+        >
+          <i class="fas fa-cog mr-3"></i> Settings
+        </a>
+      </nav>
+
+      <div class="absolute bottom-4 left-4 right-4">
+        <button
+          id="logoutButton"
+          class="w-full py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition flex items-center justify-center"
+        >
+          <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+      <!-- Header -->
+      <header class="bg-white shadow-sm py-4 px-6">
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-800">Discussions</h1>
+          <div class="flex items-center space-x-4"></div>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <main class="p-6">
+        <!-- Discussion List -->
+        <div id="diskusiContainer" class="space-y-4"></div>
+      </main>
+      <div
+        id="chatForumModal"
+        class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center"
+      >
+        <div class="bg-white max-w-2xl w-full rounded-lg p-6 relative">
+          <h2 class="text-lg font-bold mb-4" id="judulDiskusiChat"></h2>
+          <div
+            id="chatContainer"
+            class="space-y-4 max-h-96 overflow-y-auto border p-4 rounded bg-gray-50"
+          ></div>
+          <textarea
+            id="inputChat"
+            rows="3"
+            class="w-full mt-4 p-2 border rounded"
+            placeholder="Tulis balasan..."
+          ></textarea>
+          <div class="mt-2 flex justify-end space-x-2">
+            <button
+              onclick="tutupForumChat()"
+              class="px-4 py-2 bg-gray-300 rounded"
+            >
+              Tutup
+            </button>
+            <button
+              onclick="kirimChat()"
+              class="px-4 py-2 bg-indigo-600 text-white rounded"
+            >
+              Kirim
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Discussion Modal -->
+    <div
+      id="newDiscussionModal"
+      class="fixed inset-0 z-50 hidden overflow-y-auto"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      >
+        <div
+          class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          aria-hidden="true"
+        ></div>
+
+        <span
+          class="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+          >&#8203;</span
+        >
+
+        <div
+          class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+        >
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                <div class="flex justify-between items-center">
+                  <h3
+                    class="text-lg leading-6 font-medium text-gray-900"
+                    id="modal-title"
+                  >
+                    New Discussion
+                  </h3>
+                  <button
+                    id="closeModal"
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div class="mt-4">
+                  <form>
+                    <div class="mb-4">
+                      <label
+                        for="discussion-title"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Title</label
+                      >
+                      <input
+                        type="text"
+                        id="discussion-title"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="What's your question?"
+                      />
+                    </div>
+                    <div class="mb-4">
+                      <label
+                        for="discussion-course"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Course</label
+                      >
+                      <select
+                        id="discussion-course"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="">Select a course</option>
+                        <option value="Advanced Mathematics">
+                          Advanced Mathematics
+                        </option>
+                        <option value="Modern Physics">Modern Physics</option>
+                        <option value="World Literature">
+                          World Literature
+                        </option>
+                        <option value="Modern History">Modern History</option>
+                      </select>
+                    </div>
+                    <div class="mb-4">
+                      <label
+                        for="discussion-topic"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Topic/Tag</label
+                      >
+                      <input
+                        type="text"
+                        id="discussion-topic"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="e.g. Chapter 4, Lab Report, etc."
+                      />
+                    </div>
+                    <div class="mb-4">
+                      <label
+                        for="discussion-content"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Details</label
+                      >
+                      <textarea
+                        id="discussion-content"
+                        rows="4"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Provide details about your question or topic..."
+                      ></textarea>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Post Discussion
+            </button>
+            <button
+              id="cancelModal"
+              type="button"
+              class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 🔹 Tab switching
+        const allTab = document.getElementById("allTab");
+        const myTab = document.getElementById("myTab");
+        const participatedTab = document.getElementById("participatedTab");
+        const unansweredTab = document.getElementById("unansweredTab");
+
+        function resetTabs() {
+          [allTab, myTab, participatedTab, unansweredTab].forEach((tab) => {
+            if (tab) {
+              tab.classList.remove("active-tab");
+              tab.classList.add("border-transparent", "text-gray-500");
+            }
+          });
+        }
+
+        if (allTab) {
+          allTab.addEventListener("click", () => {
+            resetTabs();
+            allTab.classList.add("active-tab");
+            allTab.classList.remove("border-transparent", "text-gray-500");
+          });
+        }
+
+        if (myTab) {
+          myTab.addEventListener("click", () => {
+            resetTabs();
+            myTab.classList.add("active-tab");
+            myTab.classList.remove("border-transparent", "text-gray-500");
+          });
+        }
+
+        if (participatedTab) {
+          participatedTab.addEventListener("click", () => {
+            resetTabs();
+            participatedTab.classList.add("active-tab");
+            participatedTab.classList.remove(
+              "border-transparent",
+              "text-gray-500"
+            );
+          });
+        }
+
+        if (unansweredTab) {
+          unansweredTab.addEventListener("click", () => {
+            resetTabs();
+            unansweredTab.classList.add("active-tab");
+            unansweredTab.classList.remove(
+              "border-transparent",
+              "text-gray-500"
+            );
+          });
+        }
+
+        // 🔹 Logout
+        const logoutButton = document.getElementById("logoutButton");
+        if (logoutButton) {
+          logoutButton.addEventListener("click", function () {
+            const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+            if (confirmLogout) {
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              window.location.href =
+                "http://127.0.0.1:5500/front_end/index.html";
+            }
+          });
+        }
+
+        // 🔹 Ambil profil siswa
+        async function fetchSiswaProfile() {
+          try {
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("Token tidak ditemukan");
+
+            const res = await fetch(
+              "http://localhost:3000/api/dashboard/siswa/profile",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            if (!res.ok) throw new Error("Respon server gagal");
+
+            const data = await res.json();
+            const profileContainer = document.getElementById("siswaProfile");
+
+            if (profileContainer) {
+              profileContainer.innerHTML = `
+            <img
+              src="${
+                data.foto ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  data.name
+                )}&background=8b5cf6&color=fff`
+              }"
+              alt="Student"
+              class="w-10 h-10 rounded-full"
+            />
+            <div>
+              <p class="font-medium">${data.name}</p>
+              <p class="text-xs text-indigo-200">${data.kelas || data.email}</p>
+            </div>
+          `;
+            }
+          } catch (err) {
+            console.error("Gagal memuat profil siswa:", err.message);
+          }
+        }
+
+        fetchSiswaProfile();
+
+        // 🔹 (Opsional) log dummy data
+        const discussions = [
+          {
+            title: "Help with Calculus Problem Set #4, Question 5",
+            course: "Advanced Mathematics",
+            topic: "Chapter 4",
+            content: "...",
+            votes: 24,
+            answers: 8,
+            author: "Dr. Smith",
+            time: "2 hours ago",
+            isMine: false,
+            hasParticipated: true,
+            isAnswered: true,
+          },
+          // dst...
+        ];
+        console.log("Discussions data:", discussions);
+      });
+
+      window.onload = () => {
+        fetchDiskusiSiswa();
+      };
+
+      async function fetchDiskusiSiswa() {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          "http://localhost:3000/api/dashboard/siswa/diskusi",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = await res.json();
+
+        const container = document.getElementById("diskusiContainer");
+        container.innerHTML = "";
+        data.forEach((d) => {
+          container.innerHTML += `
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-bold">${d.judul}</h2>
+          <p class="text-gray-600">${d.isi}</p>
+          <div class="mt-2 text-sm text-gray-500">
+            Diposting oleh: <span class="font-medium">${d.guru}</span>
+          </div>
+          <button onclick="bukaForumChat(${d.id}, '${d.judul}')" class="mt-3 text-indigo-600 hover:underline">
+            Lihat Diskusi
+          </button>
+        </div>`;
+        });
+      }
+
+      let diskusiAktifId = null;
+
+      async function bukaForumChat(id, judul) {
+        diskusiAktifId = id;
+        document.getElementById("judulDiskusiChat").innerText = judul;
+        document.getElementById("chatForumModal").classList.remove("hidden");
+        await loadChat();
+      }
+
+      function tutupForumChat() {
+        document.getElementById("chatForumModal").classList.add("hidden");
+        document.getElementById("chatContainer").innerHTML = "";
+        document.getElementById("inputChat").value = "";
+      }
+
+      async function loadChat() {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = await res.json();
+        const container = document.getElementById("chatContainer");
+        container.innerHTML = "";
+        data.forEach((chat) => {
+          container.innerHTML += `
+        <div class="bg-white border p-2 rounded shadow-sm">
+          <p class="text-sm font-semibold">${chat.name} <span class="text-xs text-gray-500">(${chat.role})</span></p>
+          <p class="text-gray-700">${chat.isi}</p>
+        </div>`;
+        });
+      }
+
+      async function kirimChat() {
+        const token = localStorage.getItem("token");
+        const isi = document.getElementById("inputChat").value.trim();
+        if (!isi) return;
+
+        await fetch(
+          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ isi }),
+          }
+        );
+
+        document.getElementById("inputChat").value = "";
+        await loadChat();
+      }
+    </script>
+  </body>
+</html>
