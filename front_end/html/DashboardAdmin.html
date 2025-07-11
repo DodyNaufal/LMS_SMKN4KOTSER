@@ -395,7 +395,9 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         // Fetch statistik dashboard admin
-        fetch("http://localhost:3000/api/dashboard/admin/stats")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/stats"
+        )
           .then((res) => res.json())
           .then((data) => {
             document.getElementById("totalSiswa").innerText = data.totalSiswa;
@@ -407,7 +409,9 @@
           .catch((err) => console.error("Error fetch stats:", err));
 
         // Fetch log aktivitas terbaru
-        fetch("http://localhost:3000/api/dashboard/admin/logs")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/logs"
+        )
           .then((res) => res.json())
           .then((data) => {
             const container = document.querySelector("#admin tbody");
@@ -439,7 +443,9 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         // === CHART 1: Student & Teacher Growth ===
-        fetch("http://localhost:3000/api/dashboard/admin/growth")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/growth"
+        )
           .then((res) => res.json())
           .then((data) => {
             const labels = [
@@ -493,7 +499,9 @@
           });
 
         // === CHART 2: Students by Program ===
-        fetch("http://localhost:3000/api/dashboard/admin/programs")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/programs"
+        )
           .then((res) => res.json())
           .then((data) => {
             const labels = data.map((p) => p.role);
@@ -526,7 +534,9 @@
           });
 
         // === CHART 3: Platform Usage Statistics ===
-        fetch("http://localhost:3000/api/dashboard/admin/usage")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/usage"
+        )
           .then((res) => res.json())
           .then((data) => {
             const labels = data.map((u) =>
@@ -555,7 +565,9 @@
             });
           });
 
-        fetch("http://localhost:3000/api/dashboard/admin/logs")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/logs"
+        )
           .then((res) => res.json())
           .then((data) => {
             const container = document.getElementById("activityLogsContainer");
@@ -586,7 +598,9 @@
           .catch((err) => console.error("Fetch activity logs error:", err));
       });
 
-      fetch("http://localhost:3000/api/dashboard/admin/verifications")
+      fetch(
+        "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/verifications"
+      )
         .then((res) => res.json())
         .then((data) => {
           const container = document.getElementById(
@@ -645,13 +659,16 @@
         });
 
       function handleVerification(id, status) {
-        fetch(`http://localhost:3000/api/dashboard/admin/verify/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status }),
-        })
+        fetch(
+          `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/verify/${id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }),
+          }
+        )
           .then((res) => res.json())
           .then(() => location.reload())
           .catch((err) => console.error("Update verification error:", err));

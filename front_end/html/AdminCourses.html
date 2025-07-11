@@ -326,7 +326,7 @@
         const closeModal = document.getElementById("closeModal");
 
         function fetchCourses(
-          url = "http://localhost:3000/api/dashboard/admin/courses"
+          url = "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses"
         ) {
           fetch(url)
             .then((res) => res.json())
@@ -406,7 +406,9 @@
           });
         }
 
-        fetch("http://localhost:3000/api/dashboard/admin/courses/stats")
+        fetch(
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses/stats"
+        )
           .then((res) => res.json())
           .then((data) => {
             document.getElementById("total-courses-count").textContent =
@@ -458,8 +460,8 @@
 
           const method = id ? "PUT" : "POST";
           const url = id
-            ? `http://localhost:3000/api/dashboard/admin/courses/${id}`
-            : "http://localhost:3000/api/dashboard/admin/courses";
+            ? `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses/${id}`
+            : "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses";
 
           fetch(url, {
             method,
@@ -491,7 +493,9 @@
             const isDelete = btn.classList.contains("btn-delete");
 
             if (isView || isEdit) {
-              fetch(`http://localhost:3000/api/dashboard/admin/courses/${id}`)
+              fetch(
+                `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses/${id}`
+              )
                 .then((res) => res.json())
                 .then((data) => {
                   openModal(
@@ -508,7 +512,7 @@
             if (isDelete) {
               if (confirm("Apakah Anda yakin ingin menghapus kursus ini?")) {
                 fetch(
-                  `http://localhost:3000/api/dashboard/admin/courses/${id}`,
+                  `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses/${id}`,
                   {
                     method: "DELETE",
                   }

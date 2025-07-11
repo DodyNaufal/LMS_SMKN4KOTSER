@@ -416,7 +416,7 @@
         list.innerHTML = `<li class="text-gray-400">Memuat data...</li>`;
 
         fetch(
-          `http://localhost:3000/api/dashboard/guru/dashboard/kelas/${encodeURIComponent(
+          `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/dashboard/kelas/${encodeURIComponent(
             kelas
           )}/students`,
           {
@@ -470,7 +470,7 @@
         async function fetchCoursesStats() {
           try {
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/admin/courses/stats"
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/courses/stats"
             );
             const data = await res.json();
             document.querySelector("#totalMapelGuru").textContent = data.total;
@@ -486,7 +486,7 @@
             if (!token) throw new Error("Token tidak ditemukan");
 
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/guru/profile",
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/profile",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -526,7 +526,7 @@
           try {
             const token = localStorage.getItem("token");
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/guru/dashboard/stats",
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/dashboard/stats",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -546,7 +546,7 @@
           try {
             const token = localStorage.getItem("token");
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/guru/dashboard/courses",
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/dashboard/courses",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -657,7 +657,7 @@
 
           try {
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/guru/courses",
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/courses",
               {
                 method: "POST",
                 headers: {

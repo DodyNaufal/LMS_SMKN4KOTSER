@@ -26,13 +26,16 @@ document
     const password = document.getElementById("password").value;
     const role = document.getElementById("role").value;
 
-    const response = await fetch("http://localhost:3000/api/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password, role }),
-    });
+    const response = await fetch(
+      "https://lmssmkn4kotser-production.up.railway.app/api/users/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password, role }),
+      }
+    );
 
     const result = await response.json();
     showNotification(result.message || "Registrasi berhasil!");

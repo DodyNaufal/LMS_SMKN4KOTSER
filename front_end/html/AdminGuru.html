@@ -428,7 +428,7 @@
 
         // Ambil dan render data guru
         function fetchTeachers(
-          url = "http://localhost:3000/api/dashboard/admin/teachers"
+          url = "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers"
         ) {
           fetch(url)
             .then((res) => res.json())
@@ -543,8 +543,8 @@
 
           const method = id ? "PUT" : "POST";
           const url = id
-            ? `http://localhost:3000/api/dashboard/admin/teachers/${id}`
-            : `http://localhost:3000/api/dashboard/admin/teachers`;
+            ? `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers/${id}`
+            : `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers`;
 
           fetch(url, {
             method,
@@ -572,7 +572,9 @@
             btn.classList.contains("btn-view") ||
             btn.classList.contains("btn-edit")
           ) {
-            fetch(`http://localhost:3000/api/dashboard/admin/teachers/${id}`)
+            fetch(
+              `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers/${id}`
+            )
               .then((res) => res.json())
               .then((data) => {
                 document.getElementById("guruId").value = data.id;
@@ -618,7 +620,7 @@
           if (btn.classList.contains("btn-delete")) {
             if (confirm("Yakin ingin menghapus data guru ini?")) {
               fetch(
-                `http://localhost:3000/api/dashboard/admin/teachers/${id}`,
+                `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers/${id}`,
                 { method: "DELETE" }
               )
                 .then((res) => res.json())
@@ -638,7 +640,7 @@
             if (!keyword) return fetchTeachers();
 
             fetch(
-              `http://localhost:3000/api/dashboard/admin/teachers/search?keyword=${encodeURIComponent(
+              `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers/search?keyword=${encodeURIComponent(
                 keyword
               )}`
             )
@@ -668,7 +670,7 @@
             if (kelas) query.append("kelas", kelas);
 
             fetch(
-              `http://localhost:3000/api/dashboard/admin/teachers/filter?${query.toString()}`
+              `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/admin/teachers/filter?${query.toString()}`
             )
               .then((res) => res.json())
               .then((data) => {

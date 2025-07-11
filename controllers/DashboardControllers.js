@@ -1107,7 +1107,7 @@ exports.createTugas = async (req, res) => {
     return res.status(400).json({ message: "Semua field wajib diisi." });
   }
 
-  const filePath = `http://localhost:3000/uploadss/tugas/${file.filename}`;
+  const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
 
   try {
     const [tugas] = await db.query(
@@ -1246,7 +1246,7 @@ exports.updateTugas = async (req, res) => {
 
     let filePath = cek.file_path;
     if (file) {
-      filePath = `http://localhost:3000/uploadss/tugas/${file.filename}`;
+      filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
     }
 
     await db.query(
@@ -1720,7 +1720,7 @@ exports.kumpulkanTugas = async (req, res) => {
     return res.status(400).json({ message: "File tugas wajib diunggah." });
   }
 
-  const filePath = `http://localhost:3000/uploadsss/KumpulanTugas/${file.filename}`;
+  const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadsss/KumpulanTugas/${file.filename}`;
 
   try {
     // Cek apakah siswa sudah pernah kumpul tugas

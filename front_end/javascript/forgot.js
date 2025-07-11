@@ -6,7 +6,7 @@ document
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/users/forgot-password",
+        "https://lmssmkn4kotser-production.up.railway.app/api/users/forgot-password",
         {
           method: "POST",
           headers: {

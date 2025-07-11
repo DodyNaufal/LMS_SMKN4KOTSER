@@ -22,11 +22,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
 
-      const response = await fetch("http://localhost:3000/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://lmssmkn4kotser-production.up.railway.app/api/users/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const result = await response.json();
 

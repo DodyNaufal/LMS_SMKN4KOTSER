@@ -447,7 +447,7 @@
           if (!token) throw new Error("Token tidak ditemukan");
 
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/guru/profile",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -512,7 +512,7 @@
           return res.status(400).json({ message: "Semua field wajib diisi." });
         }
 
-        const filePath = `http://localhost:3000/uploadss/tugas/${file.filename}`;
+        const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
 
         try {
           const [tugas] = await db.query(
@@ -577,7 +577,7 @@
 
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/tugas${
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/tugas${
               isEdit ? `/${tugasId}` : ""
             }`,
             {
@@ -627,7 +627,7 @@
 
         try {
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/guru/tugas",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/tugas",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -748,7 +748,7 @@
         const token = localStorage.getItem("token");
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/tugas/${id}`,
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/tugas/${id}`,
             {
               method: "DELETE",
               headers: {
@@ -774,7 +774,7 @@
         const token = localStorage.getItem("token");
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/tugas/${id}`,
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/tugas/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -836,7 +836,7 @@
         const token = localStorage.getItem("token");
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/tugas/${tugasId}/detail`,
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/tugas/${tugasId}/detail`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -867,7 +867,7 @@
               <a href="${
                 s.file_path.startsWith("http")
                   ? s.file_path
-                  : `http://localhost:3000${s.file_path}`
+                  : `https://lmssmkn4kotser-production.up.railway.app${s.file_path}`
               }" target="_blank" class="text-indigo-600 text-sm underline">Lihat File</a>
               <input type="number" min="0" max="100" value="${
                 s.nilai !== null ? s.nilai : ""
@@ -900,7 +900,7 @@
         const token = localStorage.getItem("token");
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/tugas/${tugasId}/nilai/${siswaId}`,
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/tugas/${tugasId}/nilai/${siswaId}`,
             {
               method: "PUT",
               headers: {

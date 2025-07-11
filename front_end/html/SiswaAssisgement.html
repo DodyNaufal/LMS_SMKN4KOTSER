@@ -295,7 +295,7 @@
           if (!token) throw new Error("Token tidak ditemukan");
 
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/siswa/profile",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -337,7 +337,7 @@
         try {
           const token = localStorage.getItem("token");
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/siswa/tugas",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/tugas",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -402,7 +402,7 @@
           <td class="p-1 whitespace-nowrap text-sm text-center">
               ${
                 tugas.file_kumpul
-                  ? `<a href="http://localhost:3000${tugas.file_kumpul}" 
+                  ? `<a href="https://lmssmkn4kotser-production.up.railway.app${tugas.file_kumpul}" 
              class="text-green-600 hover:text-green-800" 
              target="_blank" 
              title="Lihat Jawaban Anda">
@@ -444,7 +444,7 @@
 
           try {
             const res = await fetch(
-              `http://localhost:3000/api/dashboard/siswa/tugas/${tugasId}/kumpulanTugas`,
+              `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/tugas/${tugasId}/kumpulanTugas`,
               {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
@@ -468,7 +468,7 @@
         try {
           const token = localStorage.getItem("token");
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/siswa/tugas/statistik",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/tugas/statistik",
             {
               headers: {
                 Authorization: `Bearer ${token}`,

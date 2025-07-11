@@ -350,7 +350,7 @@
             if (!token) throw new Error("Token tidak ditemukan");
 
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/siswa/profile",
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/profile",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -416,7 +416,7 @@
       async function fetchDiskusiSiswa() {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          "http://localhost:3000/api/dashboard/siswa/diskusi",
+          "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/diskusi",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -458,7 +458,7 @@
       async function loadChat() {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/diskusi/${diskusiAktifId}/chat`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -481,7 +481,7 @@
         if (!isi) return;
 
         await fetch(
-          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/diskusi/${diskusiAktifId}/chat`,
           {
             method: "POST",
             headers: {

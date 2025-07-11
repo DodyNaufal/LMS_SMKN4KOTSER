@@ -587,7 +587,7 @@
           if (!token) throw new Error("Token tidak ditemukan");
 
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/guru/profile",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,

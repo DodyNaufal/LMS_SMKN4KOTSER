@@ -254,7 +254,7 @@
         try {
           const token = localStorage.getItem("token");
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/guru/profile",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -314,8 +314,8 @@
 
         const method = idDiskusiYangSedangDiedit ? "PUT" : "POST";
         const url = idDiskusiYangSedangDiedit
-          ? `http://localhost:3000/api/dashboard/guru/diskusi/${idDiskusiYangSedangDiedit}`
-          : "http://localhost:3000/api/dashboard/guru/diskusi";
+          ? `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/diskusi/${idDiskusiYangSedangDiedit}`
+          : "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/diskusi";
 
         try {
           const res = await fetch(url, {
@@ -343,7 +343,7 @@
 
         try {
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/guru/diskusi",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/diskusi",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -394,7 +394,7 @@
 
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/diskusi/${id}`,
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/diskusi/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -424,7 +424,7 @@
 
         try {
           const res = await fetch(
-            `http://localhost:3000/api/dashboard/guru/diskusi/${id}`,
+            `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/guru/diskusi/${id}`,
             {
               method: "DELETE",
               headers: {
@@ -493,7 +493,7 @@
       async function loadChat() {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/diskusi/${diskusiAktifId}/chat`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -517,7 +517,7 @@
         if (!isi) return;
 
         await fetch(
-          `http://localhost:3000/api/dashboard/diskusi/${diskusiAktifId}/chat`,
+          `https://lmssmkn4kotser-production.up.railway.app/api/dashboard/diskusi/${diskusiAktifId}/chat`,
           {
             method: "POST",
             headers: {

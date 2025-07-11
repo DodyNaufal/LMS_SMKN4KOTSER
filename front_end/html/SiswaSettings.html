@@ -288,7 +288,7 @@
           if (!token) throw new Error("Token tidak ditemukan");
 
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/siswa/profile",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -332,7 +332,7 @@
         async function loadSiswaProfile() {
           try {
             const res = await fetch(
-              "http://localhost:3000/api/dashboard/siswa/profile",
+              "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/profile",
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -368,7 +368,7 @@
           };
 
           const res = await fetch(
-            "http://localhost:3000/api/dashboard/siswa/profile",
+            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/profile",
             {
               method: "PUT",
               headers: {
@@ -418,10 +418,13 @@
           };
           reader.readAsDataURL(file);
 
-          fetch("http://localhost:3000/api/users/update-profile-picture", {
-            method: "POST",
-            body: formData,
-          })
+          fetch(
+            "https://lmssmkn4kotser-production.up.railway.app/api/users/update-profile-picture",
+            {
+              method: "POST",
+              body: formData,
+            }
+          )
             .then((res) => res.json())
             .then((res) => {
               alert(res.message || "Foto berhasil diubah");

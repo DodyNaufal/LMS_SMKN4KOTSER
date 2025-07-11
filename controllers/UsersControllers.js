@@ -186,7 +186,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Encode token agar tidak rusak di URL
     const encodedToken = encodeURIComponent(token);
-    const resetLink = `http://localhost:3000/reset.html?token=${encodedToken}`;
+    const resetLink = `https://lmssmkn4kotser-production.up.railway.app/reset.html?token=${encodedToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
