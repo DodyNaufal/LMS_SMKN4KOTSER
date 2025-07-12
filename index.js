@@ -24,14 +24,6 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 app.use("/uploadss", express.static(path.join(__dirname, "public/uploadss"))); // untuk akses file upload
 app.use("/uploadsss", express.static(path.join(__dirname, "public/uploadsss")));
 
-const tugasDir = path.join(__dirname, "public/uploadss/tugas");
-if (!fs.existsSync(tugasDir)) {
-  fs.mkdirSync(tugasDir, { recursive: true });
-}
-const kumpulanTugasDir = path.join(__dirname, "public/uploadsss/KumpulanTugas");
-if (!fs.existsSync(kumpulanTugasDir)) {
-  fs.mkdirSync(kumpulanTugasDir, { recursive: true });
-}
 // Import routes
 const usersRoutes = require("./routes/UsersRoutes");
 const dashboardRoutes = require("./routes/DashboardRoutes");
