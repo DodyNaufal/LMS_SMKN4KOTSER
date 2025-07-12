@@ -37,7 +37,7 @@ const roleMiddleware = (roles) => {
 // Upload config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploadsss/kumpulanTugas");
+    cb(null, "public/uploadss/tugas");
   },
   filename: function (req, file, cb) {
     const uniqueName =
