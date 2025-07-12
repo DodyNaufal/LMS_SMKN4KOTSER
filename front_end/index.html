@@ -319,13 +319,13 @@
               // Redirect berdasarkan role
               switch (result.user.role.toLowerCase()) {
                 case "admin":
-                  window.location.href = "/front_end/html/DashboardAdmin.html";
+                  window.location.href = "/html/DashboardAdmin.html";
                   break;
                 case "guru":
-                  window.location.href = "/front_end/html/DashboardGuru.html";
+                  window.location.href = "/html/DashboardGuru.html";
                   break;
                 case "siswa":
-                  window.location.href = "/front_end/html/DashboardSiswa.html";
+                  window.location.href = "/html/DashboardSiswa.html";
                   break;
                 default:
                   alert("Peran tidak dikenali: " + result.user.role);
