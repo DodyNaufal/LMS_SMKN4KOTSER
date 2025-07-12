@@ -1,10 +1,11 @@
+const multer = require("multer");
+const path = require("path");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-// Middleware untuk verifikasi token JWT
+// Middleware token
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res
       .status(401)
@@ -12,17 +13,16 @@ const authMiddleware = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // ✔️ gunakan JWT_SECRET yang benar
-    req.user = decoded; // ✔️ ini penting agar req.user.id bisa dipakai
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(403).json({ message: "Token tidak valid" });
   }
 };
 
-// Middleware untuk role-based access
+// Role access
 const roleMiddleware = (roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -34,4 +34,21 @@ const roleMiddleware = (roles) => {
   };
 };
 
-module.exports = { authMiddleware, roleMiddleware };
+// Upload config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploadsss/kumpulanTugas");
+  },
+  filename: function (req, file, cb) {
+    const uniqueName =
+      Date.now() +
+      "-" +
+      Math.round(Math.random() * 1e9) +
+      path.extname(file.originalname);
+    cb(null, uniqueName);
+  },
+});
+
+const uploadTugas = multer({ storage });
+
+module.exports = { authMiddleware, roleMiddleware, uploadTugas };
