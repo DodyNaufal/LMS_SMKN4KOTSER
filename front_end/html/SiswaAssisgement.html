@@ -439,10 +439,10 @@
         .getElementById("formUploadTugas")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
+          const BASE_URL = "https://lmssmkn4kotser-production.up.railway.app";
           const tugasId = document.getElementById("tugasId").value;
           const formData = new FormData(this);
           const token = localStorage.getItem("token");
-          const BASE_URL = "https://lmssmkn4kotser-production.up.railway.app";
 
           try {
             const res = await fetch(
