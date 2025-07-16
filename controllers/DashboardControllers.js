@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const transporter = require("../config/email");
+const cloudinary = require("../config/cloudinary");
 require("dotenv").config();
 
 exports.adminDashboard = (req, res) => {
@@ -1093,6 +1094,48 @@ exports.getGuruCoursesWithClassAndCount = async (req, res) => {
 };
 
 // ✅ CREATE TUGAS
+// exports.createTugas = async (req, res) => {
+//   const guruId = req.user.id;
+//   const { judul, deskripsi, deadline } = req.body;
+//   const file = req.file;
+//   const kelasRaw = req.body.kelas || req.body["kelas[]"];
+//   const kelasArray = Array.isArray(kelasRaw) ? kelasRaw : [kelasRaw];
+
+//   if (!file)
+//     return res.status(400).json({ message: "File tugas tidak ditemukan." });
+
+//   if (!judul || !deskripsi || !deadline || kelasArray.length === 0) {
+//     return res.status(400).json({ message: "Semua field wajib diisi." });
+//   }
+
+//   const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
+
+//   try {
+//     const [tugas] = await db.query(
+//       `INSERT INTO tugas (judul, deskripsi, deadline, file_path, created_by) VALUES (?, ?, ?, ?, ?)`,
+//       [judul, deskripsi, deadline, filePath, guruId]
+//     );
+//     const tugasId = tugas.insertId;
+
+//     for (const kelas of kelasArray) {
+//       const [k] = await db.query("SELECT id FROM kelas WHERE nama_kelas = ?", [
+//         kelas,
+//       ]);
+//       if (k.length > 0) {
+//         await db.query(
+//           "INSERT INTO tugas_kelas (tugas_id, kelas_id) VALUES (?, ?)",
+//           [tugasId, k[0].id]
+//         );
+//       }
+//     }
+
+//     res.json({ message: "Tugas berhasil dibuat." });
+//   } catch (err) {
+//     console.error("Gagal membuat tugas:", err);
+//     res.status(500).json({ message: "Gagal membuat tugas." });
+//   }
+// };
+
 exports.createTugas = async (req, res) => {
   const guruId = req.user.id;
   const { judul, deskripsi, deadline } = req.body;
@@ -1107,9 +1150,14 @@ exports.createTugas = async (req, res) => {
     return res.status(400).json({ message: "Semua field wajib diisi." });
   }
 
-  const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
-
   try {
+    const result = await cloudinary.uploader.upload(file.path, {
+      resource_type: "raw",
+      folder: "tugas",
+    });
+
+    const filePath = result.secure_url;
+
     const [tugas] = await db.query(
       `INSERT INTO tugas (judul, deskripsi, deadline, file_path, created_by) VALUES (?, ?, ?, ?, ?)`,
       [judul, deskripsi, deadline, filePath, guruId]
@@ -1229,6 +1277,52 @@ exports.getTugasById = async (req, res) => {
   }
 };
 
+// exports.updateTugas = async (req, res) => {
+//   const guruId = req.user.id;
+//   const tugasId = req.params.id;
+//   const { judul, deskripsi, deadline } = req.body;
+//   const file = req.file;
+//   const kelasRaw = req.body.kelas || req.body["kelas[]"];
+//   const kelasArray = Array.isArray(kelasRaw) ? kelasRaw : [kelasRaw];
+
+//   try {
+//     const [[cek]] = await db.query(
+//       `SELECT * FROM tugas WHERE id = ? AND created_by = ?`,
+//       [tugasId, guruId]
+//     );
+//     if (!cek) return res.status(403).json({ message: "Akses ditolak" });
+
+//     let filePath = cek.file_path;
+//     if (file) {
+//       filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
+//     }
+
+//     await db.query(
+//       `UPDATE tugas SET judul = ?, deskripsi = ?, deadline = ?, file_path = ? WHERE id = ?`,
+//       [judul, deskripsi, deadline, filePath, tugasId]
+//     );
+
+//     await db.query(`DELETE FROM tugas_kelas WHERE tugas_id = ?`, [tugasId]);
+
+//     for (const kelas of kelasArray) {
+//       const [k] = await db.query("SELECT id FROM kelas WHERE nama_kelas = ?", [
+//         kelas,
+//       ]);
+//       if (k.length > 0) {
+//         await db.query(
+//           "INSERT INTO tugas_kelas (tugas_id, kelas_id) VALUES (?, ?)",
+//           [tugasId, k[0].id]
+//         );
+//       }
+//     }
+
+//     res.json({ message: "Tugas berhasil diperbarui." });
+//   } catch (err) {
+//     console.error("Gagal update tugas:", err);
+//     res.status(500).json({ message: "Gagal memperbarui tugas." });
+//   }
+// };
+
 exports.updateTugas = async (req, res) => {
   const guruId = req.user.id;
   const tugasId = req.params.id;
@@ -1245,8 +1339,13 @@ exports.updateTugas = async (req, res) => {
     if (!cek) return res.status(403).json({ message: "Akses ditolak" });
 
     let filePath = cek.file_path;
+
     if (file) {
-      filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadss/tugas/${file.filename}`;
+      const result = await cloudinary.uploader.upload(file.path, {
+        resource_type: "raw",
+        folder: "tugas",
+      });
+      filePath = result.secure_url;
     }
 
     await db.query(
@@ -1711,6 +1810,40 @@ exports.getTugasUntukSiswa = async (req, res) => {
   }
 };
 
+// exports.kumpulkanTugas = async (req, res) => {
+//   const siswaId = req.user.id;
+//   const tugasId = req.params.id;
+//   const file = req.file;
+
+//   if (!file) {
+//     return res.status(400).json({ message: "File tugas wajib diunggah." });
+//   }
+
+//   const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadsss/KumpulanTugas/${file.filename}`;
+
+//   try {
+//     // Cek apakah siswa sudah pernah kumpul tugas
+//     const [existing] = await db.query(
+//       `SELECT * FROM pengumpulan_tugas WHERE tugas_id = ? AND siswa_id = ?`,
+//       [tugasId, siswaId]
+//     );
+
+//     if (existing.length > 0) {
+//       return res.status(400).json({ message: "Tugas sudah dikumpulkan." });
+//     }
+
+//     await db.query(
+//       `INSERT INTO pengumpulan_tugas (tugas_id, siswa_id, file_path) VALUES (?, ?, ?)`,
+//       [tugasId, siswaId, filePath]
+//     );
+
+//     res.json({ message: "Tugas berhasil dikumpulkan." });
+//   } catch (err) {
+//     console.error("Gagal kumpulkan tugas:", err);
+//     res.status(500).json({ message: "Gagal kumpulkan tugas." });
+//   }
+// };
+
 exports.kumpulkanTugas = async (req, res) => {
   const siswaId = req.user.id;
   const tugasId = req.params.id;
@@ -1720,10 +1853,14 @@ exports.kumpulkanTugas = async (req, res) => {
     return res.status(400).json({ message: "File tugas wajib diunggah." });
   }
 
-  const filePath = `https://lmssmkn4kotser-production.up.railway.app/uploadsss/KumpulanTugas/${file.filename}`;
-
   try {
-    // Cek apakah siswa sudah pernah kumpul tugas
+    const result = await cloudinary.uploader.upload(file.path, {
+      resource_type: "raw",
+      folder: "pengumpulan_tugas",
+    });
+
+    const filePath = result.secure_url;
+
     const [existing] = await db.query(
       `SELECT * FROM pengumpulan_tugas WHERE tugas_id = ? AND siswa_id = ?`,
       [tugasId, siswaId]
