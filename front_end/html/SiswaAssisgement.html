@@ -454,18 +454,61 @@
               }
             );
 
-            const result = await res.json();
-            if (res.ok) {
-              alert("Tugas berhasil dikumpulkan.");
+            const text = await res.text(); // ⚠️ aman walaupun error
+
+            if (!res.ok) {
+              console.error("❌ Upload error:", text);
+              alert("Gagal upload tugas:\n" + text);
+              return;
+            }
+
+            let result;
+            try {
+              result = JSON.parse(text); // hanya parse jika sukses
+              alert("✅ Tugas berhasil dikumpulkan.");
               tutupModal();
               loadTugasSiswa(); // reload data
-            } else {
-              alert(result.message || "Gagal kumpulkan tugas.");
+            } catch (parseErr) {
+              console.error("❌ Gagal parsing respon JSON:", parseErr);
+              alert("Upload berhasil, tapi data tidak valid.");
             }
           } catch (err) {
-            console.error("Upload gagal:", err);
+            console.error("❌ Upload gagal:", err);
+            alert("Terjadi kesalahan saat mengupload tugas.");
           }
         });
+
+      // document
+      //   .getElementById("formUploadTugas")
+      //   .addEventListener("submit", async function (e) {
+      //     e.preventDefault();
+      //     const BASE_URL = "https://lmssmkn4kotser-production.up.railway.app";
+      //     const tugasId = document.getElementById("tugasId").value;
+      //     const formData = new FormData(this);
+      //     const token = localStorage.getItem("token");
+
+      //     try {
+      //       const res = await fetch(
+      //         `${BASE_URL}/api/dashboard/siswa/tugas/${tugasId}/kumpulanTugas`,
+      //         {
+      //           method: "POST",
+      //           headers: { Authorization: `Bearer ${token}` },
+      //           body: formData,
+      //         }
+      //       );
+
+      //       const result = await res.json();
+      //       if (res.ok) {
+      //         alert("Tugas berhasil dikumpulkan.");
+      //         tutupModal();
+      //         loadTugasSiswa(); // reload data
+      //       } else {
+      //         alert(result.message || "Gagal kumpulkan tugas.");
+      //       }
+      //     } catch (err) {
+      //       console.error("Upload gagal:", err);
+      //     }
+      //   });
       async function loadAssignmentStats() {
         try {
           const token = localStorage.getItem("token");
