@@ -1844,6 +1844,44 @@ exports.getTugasUntukSiswa = async (req, res) => {
 //   }
 // };
 
+// exports.kumpulkanTugas = async (req, res) => {
+//   const siswaId = req.user.id;
+//   const tugasId = req.params.id;
+//   const file = req.file;
+
+//   if (!file) {
+//     return res.status(400).json({ message: "File tugas wajib diunggah." });
+//   }
+
+//   try {
+//     const result = await cloudinary.uploader.upload(file.path, {
+//       resource_type: "raw",
+//       folder: "pengumpulan_tugas",
+//     });
+
+//     const filePath = result.secure_url;
+
+//     const [existing] = await db.query(
+//       `SELECT * FROM pengumpulan_tugas WHERE tugas_id = ? AND siswa_id = ?`,
+//       [tugasId, siswaId]
+//     );
+
+//     if (existing.length > 0) {
+//       return res.status(400).json({ message: "Tugas sudah dikumpulkan." });
+//     }
+
+//     await db.query(
+//       `INSERT INTO pengumpulan_tugas (tugas_id, siswa_id, file_path) VALUES (?, ?, ?)`,
+//       [tugasId, siswaId, filePath]
+//     );
+
+//     res.json({ message: "Tugas berhasil dikumpulkan." });
+//   } catch (err) {
+//     console.error("Gagal kumpulkan tugas:", err);
+//     res.status(500).json({ message: "Gagal kumpulkan tugas." });
+//   }
+// };
+
 exports.kumpulkanTugas = async (req, res) => {
   const siswaId = req.user.id;
   const tugasId = req.params.id;
@@ -1854,11 +1892,26 @@ exports.kumpulkanTugas = async (req, res) => {
   }
 
   try {
-    const result = await cloudinary.uploader.upload(file.path, {
-      resource_type: "raw",
-      folder: "pengumpulan_tugas",
-    });
+    const streamUpload = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "raw",
+            folder: "pengumpulan_tugas",
+          },
+          (error, result) => {
+            if (result) {
+              resolve(result);
+            } else {
+              reject(error);
+            }
+          }
+        );
+        stream.end(fileBuffer);
+      });
+    };
 
+    const result = await streamUpload(file.buffer);
     const filePath = result.secure_url;
 
     const [existing] = await db.query(
@@ -1877,8 +1930,10 @@ exports.kumpulkanTugas = async (req, res) => {
 
     res.json({ message: "Tugas berhasil dikumpulkan." });
   } catch (err) {
-    console.error("Gagal kumpulkan tugas:", err);
-    res.status(500).json({ message: "Gagal kumpulkan tugas." });
+    console.error("❌ Gagal upload tugas:", err.message);
+    res
+      .status(500)
+      .json({ message: "Gagal upload tugas.", error: err.message });
   }
 };
 

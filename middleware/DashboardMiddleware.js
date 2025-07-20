@@ -49,6 +49,4 @@ const storage = multer.diskStorage({
   },
 });
 
-const uploadTugas = multer({ storage });
-
 module.exports = { authMiddleware, roleMiddleware, uploadTugas };
