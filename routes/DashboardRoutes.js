@@ -79,11 +79,19 @@ const storage = multer.diskStorage({
       cb(null, "public/uploads/courses/");
     } else if (req.originalUrl.includes("/guru/tugas")) {
       cb(null, "public/uploadss/tugas/");
-    } else if (req.originalUrl.includes("/siswa/tugas")) {
-      cb(null, "public/uploadsss/kumpulanTugas/");
     } else {
       cb(null, "public/uploads/others/");
     }
+
+    // if (req.originalUrl.includes("/guru/courses")) {
+    //   cb(null, "public/uploads/courses/");
+    // } else if (req.originalUrl.includes("/guru/tugas")) {
+    //   cb(null, "public/uploadss/tugas/");
+    // } else if (req.originalUrl.includes("/siswa/tugas")) {
+    //   cb(null, "public/uploadsss/kumpulanTugas/");
+    // } else {
+    //   cb(null, "public/uploads/others/");
+    // }
   },
   filename: (req, file, cb) => {
     cb(
