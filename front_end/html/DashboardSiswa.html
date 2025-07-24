@@ -274,41 +274,51 @@
       fetchSiswaProfile();
 
       async function loadMateriSiswa() {
+        const BASE_URL = "https://lmssmkn4kotser-production.up.railway.app";
+        const token = localStorage.getItem("token");
+
         try {
-          const token = localStorage.getItem("token");
-          const res = await fetch(
-            "https://lmssmkn4kotser-production.up.railway.app/api/dashboard/siswa/materi",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await res.json();
+          const res = await fetch(`${BASE_URL}/api/dashboard/siswa/materi`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-          const container = document.getElementById("courseContainer");
-          container.innerHTML = "";
+          if (!res.ok) throw new Error("Gagal mengambil materi.");
 
-          data.forEach((course) => {
-            container.innerHTML += `
-          <div class="course-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
-            <div class="p-5">
-              <h3 class="text-lg font-bold text-gray-800 mb-2">${course.name}</h3>
-              <p class="text-sm text-gray-600 mb-2">${course.description}</p>
-              <p class="text-xs text-gray-500 mb-2">Dibuat oleh: ${course.guru}</p>
-              <a href="https://lmssmkn4kotser-production.up.railway.app${course.file_path}" 
-                class="inline-block mt-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm">
-                Lihat Materi
-              </a>
-            </div>
-          </div>`;
+          const materi = await res.json();
+          const list = document.getElementById("materiList");
+          list.innerHTML = "";
+
+          if (materi.length === 0) {
+            list.innerHTML =
+              "<p class='text-gray-500'>Belum ada materi tersedia.</p>";
+            return;
+          }
+
+          materi.forEach((m) => {
+            const card = document.createElement("div");
+            card.className = "border p-4 rounded-md bg-gray-50 shadow";
+
+            card.innerHTML = `
+          <h3 class="text-lg font-semibold">${m.name}</h3>
+          <p class="text-sm text-gray-600">Oleh: ${m.guru} | Tanggal: ${m.tanggal_upload}</p>
+          <p class="my-2 text-gray-700">${m.description}</p>
+          <a href="${m.file_path}" target="_blank" class="inline-block mt-2 px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+            📄 Lihat Materi
+          </a>
+        `;
+
+            list.appendChild(card);
           });
         } catch (err) {
-          console.error("Gagal load materi siswa:", err);
+          console.error("❌ Gagal memuat materi:", err);
+          alert("Terjadi kesalahan saat mengambil materi.");
         }
       }
 
-      window.onload = loadMateriSiswa;
+      // Panggil fungsi saat halaman dimuat
+      window.onload = () => {
+        loadMateriSiswa();
+      };
     </script>
   </body>
 </html>
