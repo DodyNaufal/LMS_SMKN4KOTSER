@@ -1145,7 +1145,6 @@ exports.createTugas = async (req, res) => {
 
   if (!file)
     return res.status(400).json({ message: "File tugas tidak ditemukan." });
-
   if (!judul || !deskripsi || !deadline || kelasArray.length === 0) {
     return res.status(400).json({ message: "Semua field wajib diisi." });
   }
@@ -1173,6 +1172,7 @@ exports.createTugas = async (req, res) => {
       `INSERT INTO tugas (judul, deskripsi, deadline, file_path, created_by) VALUES (?, ?, ?, ?, ?)`,
       [judul, deskripsi, deadline, filePath, guruId]
     );
+
     const tugasId = tugas.insertId;
 
     for (const kelas of kelasArray) {
@@ -1333,6 +1333,69 @@ exports.getTugasById = async (req, res) => {
 //     res.status(500).json({ message: "Gagal memperbarui tugas." });
 //   }
 // };
+
+exports.updateTugas = async (req, res) => {
+  const guruId = req.user.id;
+  const tugasId = req.params.id;
+  const { judul, deskripsi, deadline } = req.body;
+  const file = req.file;
+  const kelasRaw = req.body.kelas || req.body["kelas[]"];
+  const kelasArray = Array.isArray(kelasRaw) ? kelasRaw : [kelasRaw];
+
+  try {
+    const [[cek]] = await db.query(
+      `SELECT * FROM tugas WHERE id = ? AND created_by = ?`,
+      [tugasId, guruId]
+    );
+    if (!cek) return res.status(403).json({ message: "Akses ditolak" });
+
+    let filePath = cek.file_path;
+
+    if (file) {
+      const ext = path.extname(file.originalname);
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "auto",
+            folder: "tugas",
+            public_id: Date.now() + "-" + path.basename(file.originalname, ext),
+          },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      });
+
+      filePath = result.secure_url;
+    }
+
+    await db.query(
+      `UPDATE tugas SET judul = ?, deskripsi = ?, deadline = ?, file_path = ? WHERE id = ?`,
+      [judul, deskripsi, deadline, filePath, tugasId]
+    );
+
+    await db.query(`DELETE FROM tugas_kelas WHERE tugas_id = ?`, [tugasId]);
+
+    for (const kelas of kelasArray) {
+      const [k] = await db.query("SELECT id FROM kelas WHERE nama_kelas = ?", [
+        kelas,
+      ]);
+      if (k.length > 0) {
+        await db.query(
+          "INSERT INTO tugas_kelas (tugas_id, kelas_id) VALUES (?, ?)",
+          [tugasId, k[0].id]
+        );
+      }
+    }
+
+    res.json({ message: "Tugas berhasil diperbarui." });
+  } catch (err) {
+    console.error("Gagal update tugas:", err);
+    res.status(500).json({ message: "Gagal memperbarui tugas." });
+  }
+};
 
 exports.deleteTugas = async (req, res) => {
   const guruId = req.user.id;
