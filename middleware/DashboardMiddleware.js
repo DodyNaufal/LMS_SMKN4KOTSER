@@ -34,4 +34,7 @@ const roleMiddleware = (roles) => {
   };
 };
 
-module.exports = { authMiddleware, roleMiddleware };
+const storage = multer.memoryStorage(); // wajib pakai memoryStorage
+const upload = multer({ storage });
+
+module.exports = { authMiddleware, roleMiddleware, upload };

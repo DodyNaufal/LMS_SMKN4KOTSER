@@ -446,7 +446,7 @@
 
           try {
             const res = await fetch(
-              `${BASE_URL}/api/dashboard/siswa/tugas/${tugasId}/uploadsss/kumpulanTugas`,
+              `${BASE_URL}/api/dashboard/siswa/tugas/${tugasId}/kumpulanTugas`,
               {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },
@@ -454,7 +454,7 @@
               }
             );
 
-            const text = await res.text(); // ⚠️ aman walaupun error
+            const text = await res.text(); // tetap aman jika error HTML
 
             if (!res.ok) {
               console.error("❌ Upload error:", text);
@@ -464,10 +464,10 @@
 
             let result;
             try {
-              result = JSON.parse(text); // hanya parse jika sukses
+              result = JSON.parse(text);
               alert("✅ Tugas berhasil dikumpulkan.");
-              tutupModal();
-              loadTugasSiswa(); // reload data
+              tutupModal(); // tutup modal upload
+              loadTugasSiswa(); // refresh data di halaman
             } catch (parseErr) {
               console.error("❌ Gagal parsing respon JSON:", parseErr);
               alert("Upload berhasil, tapi data tidak valid.");
