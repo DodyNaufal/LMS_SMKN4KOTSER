@@ -67,44 +67,36 @@ const {
   roleMiddleware,
   upload,
 } = require("../middleware/DashboardMiddleware");
-const multer = require("multer");
+// const multer = require("multer");
 const path = require("path");
 const router = express.Router();
 
 // Setup penyimpanan file
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Kondisi berdasarkan URL
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     // Kondisi berdasarkan URL
 
-    // if (req.originalUrl.includes("/guru/courses")) {
-    //   cb(null, "public/uploads/courses/");
-    // } else if (req.originalUrl.includes("/guru/tugas")) {
-    //   cb(null, "public/uploadss/tugas/");
-    // } else {
-    //   cb(null, "public/uploads/others/");
-    // }
-
-    if (req.originalUrl.includes("/guru/courses")) {
-      cb(null, "public/uploads/courses/");
-    } else if (req.originalUrl.includes("/guru/tugas")) {
-      cb(null, "public/uploadss/tugas/");
-    } else if (req.originalUrl.includes("/siswa/tugas")) {
-      cb(null, "public/uploadsss/kumpulanTugas/");
-    } else {
-      cb(null, "public/uploads/others/");
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      Date.now() +
-        "-" +
-        Math.round(Math.random() * 1e9) +
-        path.extname(file.originalname)
-    );
-  },
-});
+//     if (req.originalUrl.includes("/guru/courses")) {
+//       cb(null, "public/uploads/courses/");
+//     } else if (req.originalUrl.includes("/guru/tugas")) {
+//       cb(null, "public/uploadss/tugas/");
+//     } else if (req.originalUrl.includes("/siswa/tugas")) {
+//       cb(null, "public/uploadsss/kumpulanTugas/");
+//     } else {
+//       cb(null, "public/uploads/others/");
+//     }
+//   },
+//   filename: (req, file, cb) => {
+//     cb(
+//       null,
+//       Date.now() +
+//         "-" +
+//         Math.round(Math.random() * 1e9) +
+//         path.extname(file.originalname)
+//     );
+//   },
+// });
 
 // const upload = multer({ storage });
 
