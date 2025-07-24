@@ -65,6 +65,7 @@ const {
 const {
   authMiddleware,
   roleMiddleware,
+  upload,
 } = require("../middleware/DashboardMiddleware");
 const multer = require("multer");
 const path = require("path");
@@ -105,7 +106,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 router.get("/admin", authMiddleware, roleMiddleware(["admin"]), adminDashboard);
 router.get("/guru", authMiddleware, roleMiddleware(["guru"]), guruDashboard);
