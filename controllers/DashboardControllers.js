@@ -785,7 +785,7 @@ exports.createCourse = async (req, res) => {
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          resource_type: "raw",
+          resource_type: "auto", // otomatis mendeteksi tipe file
           folder: "materi",
           public_id: Date.now() + "-" + path.basename(file.originalname, ext),
         },
