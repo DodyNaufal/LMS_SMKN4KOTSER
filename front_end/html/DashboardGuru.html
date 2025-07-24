@@ -244,18 +244,20 @@
                 </h3>
 
                 <label
+                  for="uploadFile"
                   class="upload-area block rounded-lg p-8 text-center cursor-pointer mb-4 bg-gray-100 border-dashed border-2 border-gray-300"
                 >
                   <i
                     class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"
                   ></i>
-                  <p class="text-gray-500">
+                  <p id="uploadText" class="text-gray-500">
                     Seret file ke sini atau klik untuk mengunggah
                   </p>
                   <p class="text-xs text-gray-400 mt-2">
                     PDF, DOCX, PNG, JPG (Maks. 10MB)
                   </p>
                   <input
+                    id="uploadFile"
                     type="file"
                     name="file"
                     accept=".pdf,.docx,.png,.jpg"
@@ -456,15 +458,17 @@
           });
         }
 
-        // Interaksi klik area upload
-        // Interaksi klik area upload
-        const uploadArea = document.querySelector(".upload-area");
-        if (uploadArea) {
-          uploadArea.addEventListener("click", function () {
-            const fileInput = uploadArea.querySelector('input[type="file"]');
-            if (fileInput) fileInput.click();
-          });
-        }
+        const fileInput = document.getElementById("uploadFile");
+        const uploadText = document.getElementById("uploadText");
+
+        fileInput.addEventListener("change", function () {
+          if (fileInput.files.length > 0) {
+            uploadText.textContent = `File dipilih: ${fileInput.files[0].name}`;
+          } else {
+            uploadText.textContent =
+              "Seret file ke sini atau klik untuk mengunggah";
+          }
+        });
 
         // Ambil statistik course guru
         async function fetchCoursesStats() {
