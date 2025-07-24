@@ -772,11 +772,6 @@ exports.getCourseById = async (req, res) => {
 // Create new course
 exports.createCourse = async (req, res) => {
   try {
-    // 🔥 Tambahkan log debug di awal fungsi
-    console.log("🔥 DEBUG: req.body =", req.body);
-    console.log("🔥 DEBUG: kelas[] =", req.body["kelas[]"]);
-    console.log("🔥 DEBUG: file =", req.file?.filename);
-
     const { name, description } = req.body;
     const file = req.file;
     const guruId = req.user?.id;
@@ -785,40 +780,50 @@ exports.createCourse = async (req, res) => {
       return res.status(400).json({ message: "File tidak ditemukan." });
     }
 
-    const filepath = `/uploads/courses/${file.filename}`;
+    // Upload ke Cloudinary
+    const ext = path.extname(file.originalname);
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "raw",
+          folder: "materi",
+          public_id: Date.now() + "-" + path.basename(file.originalname, ext),
+        },
+        (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        }
+      );
+      stream.end(file.buffer);
+    });
 
-    // Tangkap dan pastikan kelas[] masuk
+    const filepath = result.secure_url;
+
+    // Tangkap kelas[]
     const kelasRaw = req.body.kelas || req.body["kelas[]"];
-
     const kelasArray = Array.isArray(kelasRaw)
       ? kelasRaw
       : kelasRaw
       ? [kelasRaw]
       : [];
 
-    console.log("✅ Kelas[] diterima dari form:", kelasArray);
-
-    // 🚨 Validasi jika tidak ada kelas dicentang
     if (kelasArray.length === 0) {
       return res.status(400).json({ message: "Pilih minimal satu kelas." });
     }
 
-    // Simpan course ke tabel courses
+    // Simpan materi ke courses
     const [course] = await db.query(
       "INSERT INTO courses (name, description, created_by, file_path) VALUES (?, ?, ?, ?)",
       [name, description, guruId, filepath]
     );
     const courseId = course.insertId;
-    console.log("🆔 ID course baru:", courseId);
 
-    // Simpan kelas ke tabel course_kelas
+    // Simpan ke relasi course_kelas
     for (const kelasNama of kelasArray) {
       const [kelasRows] = await db.query(
         "SELECT id FROM kelas WHERE nama_kelas = ?",
         [kelasNama]
       );
-
-      console.log(`🔍 Mencari ID kelas untuk: ${kelasNama}`, kelasRows);
 
       if (kelasRows.length > 0) {
         const kelasId = kelasRows[0].id;
@@ -826,11 +831,6 @@ exports.createCourse = async (req, res) => {
           "INSERT INTO course_kelas (course_id, kelas_id) VALUES (?, ?)",
           [courseId, kelasId]
         );
-        console.log(
-          `✅ Berhasil insert course_kelas: (${courseId}, ${kelasId})`
-        );
-      } else {
-        console.warn(`⚠️ Kelas tidak ditemukan di database: ${kelasNama}`);
       }
     }
 
@@ -844,16 +844,84 @@ exports.createCourse = async (req, res) => {
 // Update course
 exports.updateCourse = async (req, res) => {
   const { id } = req.params;
-  const { name, description, kelas } = req.body;
+  const { name, description } = req.body;
+  const file = req.file;
+  const guruId = req.user?.id;
+
   try {
-    await db.query(
-      `UPDATE courses SET name = ?, description = ?, kelas = ? WHERE id = ?`,
-      [name, description, kelas, id]
+    // Cek dulu data existing course-nya
+    const [[existing]] = await db.query(
+      "SELECT * FROM courses WHERE id = ? AND created_by = ?",
+      [id, guruId]
     );
-    res.json({ message: "Course berhasil diperbarui" });
-  } catch (error) {
-    console.error("Gagal mengupdate course:", error);
-    res.status(500).json({ message: "Gagal mengupdate course" });
+
+    if (!existing) {
+      return res
+        .status(404)
+        .json({ message: "Course tidak ditemukan atau bukan milik Anda." });
+    }
+
+    // Default gunakan file lama
+    let filepath = existing.file_path;
+
+    // Jika ada file baru, upload ke Cloudinary
+    if (file) {
+      const ext = path.extname(file.originalname);
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "raw",
+            folder: "materi",
+            public_id: Date.now() + "-" + path.basename(file.originalname, ext),
+          },
+          (err, result) => {
+            if (err) reject(err);
+            else resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      });
+
+      filepath = result.secure_url;
+    }
+
+    // Update table `courses`
+    await db.query(
+      "UPDATE courses SET name = ?, description = ?, file_path = ? WHERE id = ?",
+      [name, description, filepath, id]
+    );
+
+    // Tangkap kelas baru
+    const kelasRaw = req.body.kelas || req.body["kelas[]"];
+    const kelasArray = Array.isArray(kelasRaw)
+      ? kelasRaw
+      : kelasRaw
+      ? [kelasRaw]
+      : [];
+
+    // Kosongkan dulu data relasi lama
+    await db.query("DELETE FROM course_kelas WHERE course_id = ?", [id]);
+
+    // Tambahkan kelas baru
+    for (const kelasNama of kelasArray) {
+      const [kelasRows] = await db.query(
+        "SELECT id FROM kelas WHERE nama_kelas = ?",
+        [kelasNama]
+      );
+
+      if (kelasRows.length > 0) {
+        const kelasId = kelasRows[0].id;
+        await db.query(
+          "INSERT INTO course_kelas (course_id, kelas_id) VALUES (?, ?)",
+          [id, kelasId]
+        );
+      }
+    }
+
+    res.json({ message: "Materi berhasil diperbarui." });
+  } catch (err) {
+    console.error("❌ Gagal update materi:", err);
+    res.status(500).json({ message: "Gagal update materi." });
   }
 };
 
@@ -1761,11 +1829,44 @@ exports.updateSiswaProfile = async (req, res) => {
 };
 
 // GET Materi khusus untuk siswa berdasarkan kelas
+// exports.getMateriUntukSiswa = async (req, res) => {
+//   const siswaId = req.user.id;
+
+//   try {
+//     // Ambil kelas siswa
+//     const [[siswa]] = await db.query(
+//       `SELECT sd.kelas_id
+//        FROM siswa_details sd
+//        WHERE sd.user_id = ?`,
+//       [siswaId]
+//     );
+
+//     if (!siswa || !siswa.kelas_id) {
+//       return res.status(404).json({ message: "Kelas siswa tidak ditemukan" });
+//     }
+
+//     // Ambil materi (courses) yang sesuai dengan kelas siswa
+//     const [materi] = await db.query(
+//       `SELECT c.id, c.name, c.description, c.file_path, c.created_at, u.name AS guru
+//        FROM courses c
+//        JOIN course_kelas ck ON ck.course_id = c.id
+//        JOIN users u ON u.id = c.created_by
+//        WHERE ck.kelas_id = ?`,
+//       [siswa.kelas_id]
+//     );
+
+//     res.json(materi);
+//   } catch (err) {
+//     console.error("Gagal ambil materi siswa:", err);
+//     res.status(500).json({ message: "Gagal mengambil materi" });
+//   }
+// };
+
 exports.getMateriUntukSiswa = async (req, res) => {
   const siswaId = req.user.id;
 
   try {
-    // Ambil kelas siswa
+    // Ambil kelas siswa dari siswa_details
     const [[siswa]] = await db.query(
       `SELECT sd.kelas_id 
        FROM siswa_details sd
@@ -1777,19 +1878,22 @@ exports.getMateriUntukSiswa = async (req, res) => {
       return res.status(404).json({ message: "Kelas siswa tidak ditemukan" });
     }
 
-    // Ambil materi (courses) yang sesuai dengan kelas siswa
+    const kelasId = siswa.kelas_id;
+
+    // Ambil materi yang berelasi dengan kelas siswa
     const [materi] = await db.query(
-      `SELECT c.id, c.name, c.description, c.file_path, c.created_at, u.name AS guru
+      `SELECT c.id, c.name, c.description, c.file_path, DATE_FORMAT(c.created_at, '%d-%m-%Y') AS tanggal_upload, u.name AS guru
        FROM courses c
        JOIN course_kelas ck ON ck.course_id = c.id
        JOIN users u ON u.id = c.created_by
-       WHERE ck.kelas_id = ?`,
-      [siswa.kelas_id]
+       WHERE ck.kelas_id = ?
+       ORDER BY c.created_at DESC`,
+      [kelasId]
     );
 
     res.json(materi);
   } catch (err) {
-    console.error("Gagal ambil materi siswa:", err);
+    console.error("❌ Gagal ambil materi siswa:", err.message);
     res.status(500).json({ message: "Gagal mengambil materi" });
   }
 };
