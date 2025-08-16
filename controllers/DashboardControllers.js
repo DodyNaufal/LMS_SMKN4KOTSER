@@ -304,20 +304,32 @@ exports.createStudent = async (req, res) => {
   const { name, email, password, nisn, jurusan, kelas } = req.body;
 
   try {
-    // Cek duplikat email
-    const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
-    if (existing.length > 0) {
+    // 🔎 Cek duplikat email
+    const [existingEmail] = await db.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    if (existingEmail.length > 0) {
       return res
         .status(400)
         .json({ message: "Email sudah digunakan oleh pengguna lain." });
     }
 
+    // 🔎 Cek duplikat NISN
+    const [existingNisn] = await db.query(
+      "SELECT * FROM siswa_details WHERE nisn = ?",
+      [nisn]
+    );
+    if (existingNisn.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "NISN sudah digunakan oleh siswa lain." });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user (tanpa is_verified)
+    // Insert user
     const [userResult] = await db.query(
       "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'siswa')",
       [name, email, hashedPassword]
