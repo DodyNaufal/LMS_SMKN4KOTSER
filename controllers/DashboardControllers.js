@@ -488,50 +488,96 @@ exports.getTeacherById = async (req, res) => {
 // POST create teacher
 // POST create teacher
 exports.createTeacher = async (req, res) => {
-  const { name, email, password, nip, mapel, kelas } = req.body;
+  const { name, email, password, nip, mapel } = req.body;
 
   try {
+    // Cek duplikat email
+    const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
+    if (existing.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Email sudah digunakan oleh pengguna lain." });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Insert user
     const [userResult] = await db.query(
       `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'guru')`,
       [name, email, hashedPassword]
     );
-
     const userId = userResult.insertId;
 
-    // Simpan ke guru_details
-    const [guruResult] = await db.query(
+    // Insert ke guru_details
+    await db.query(
       `INSERT INTO guru_details (user_id, nip, mapel) VALUES (?, ?, ?)`,
       [userId, nip, mapel]
     );
-    const guruId = guruResult.insertId;
 
-    // Simpan kelas (pisahkan dengan koma)
-    const kelasArray = kelas.split(",").map((k) => k.trim());
-    for (let nama_kelas of kelasArray) {
-      const [kelasRows] = await db.query(
-        "SELECT id FROM kelas WHERE nama_kelas = ?",
-        [kelas]
-      );
-      if (kelasRows.length === 0) {
-        return res.status(400).json({ message: "Kelas tidak ditemukan." });
-      }
+    // ✅ Otomatis set verifikasi guru
+    await db.query(
+      "INSERT INTO verifications (user_id, status) VALUES (?, 'approved')",
+      [userId]
+    );
 
-      if (kelasRows.length > 0) {
-        await db.query(
-          "UPDATE siswa_details SET nisn = ?, jurusan = ?, kelas_id = ? WHERE user_id = ?",
-          [nisn, jurusan, kelas_id, id]
-        );
-      }
-    }
-
-    res.json({ message: "Guru berhasil ditambahkan" });
+    res.json({
+      message: "Guru berhasil ditambahkan dan otomatis diverifikasi.",
+    });
   } catch (error) {
     console.error("Gagal menambah guru:", error);
     res.status(500).json({ message: "Gagal menambah guru" });
   }
 };
+
+// POST create teacher
+// exports.createTeacher = async (req, res) => {
+//   const { name, email, password, nip, mapel, kelas } = req.body;
+
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     const [userResult] = await db.query(
+//       `INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'guru')`,
+//       [name, email, hashedPassword]
+//     );
+
+//     const userId = userResult.insertId;
+
+//     // Simpan ke guru_details
+//     const [guruResult] = await db.query(
+//       `INSERT INTO guru_details (user_id, nip, mapel) VALUES (?, ?, ?)`,
+//       [userId, nip, mapel]
+//     );
+//     const guruId = guruResult.insertId;
+
+//     // Simpan kelas (pisahkan dengan koma)
+//     const kelasArray = kelas.split(",").map((k) => k.trim());
+//     for (let nama_kelas of kelasArray) {
+//       const [kelasRows] = await db.query(
+//         "SELECT id FROM kelas WHERE nama_kelas = ?",
+//         [kelas]
+//       );
+//       if (kelasRows.length === 0) {
+//         return res.status(400).json({ message: "Kelas tidak ditemukan." });
+//       }
+
+//       if (kelasRows.length > 0) {
+//         await db.query(
+//           "UPDATE siswa_details SET nisn = ?, jurusan = ?, kelas_id = ? WHERE user_id = ?",
+//           [nisn, jurusan, kelas_id, id]
+//         );
+//       }
+//     }
+
+//     res.json({ message: "Guru berhasil ditambahkan" });
+//   } catch (error) {
+//     console.error("Gagal menambah guru:", error);
+//     res.status(500).json({ message: "Gagal menambah guru" });
+//   }
+// };
 
 // PUT update teacher
 exports.updateTeacher = async (req, res) => {
