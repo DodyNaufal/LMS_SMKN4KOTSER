@@ -486,19 +486,30 @@ exports.getTeacherById = async (req, res) => {
 };
 
 // POST create teacher
-// POST create teacher
 exports.createTeacher = async (req, res) => {
   const { name, email, password, nip, mapel } = req.body;
 
   try {
-    // Cek duplikat email
-    const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
-    if (existing.length > 0) {
+    // 🔎 Cek duplikat email
+    const [existingEmail] = await db.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    if (existingEmail.length > 0) {
       return res
         .status(400)
         .json({ message: "Email sudah digunakan oleh pengguna lain." });
+    }
+
+    // 🔎 Cek duplikat NIP
+    const [existingNip] = await db.query(
+      "SELECT * FROM guru_details WHERE nip = ?",
+      [nip]
+    );
+    if (existingNip.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "NIP sudah digunakan oleh guru lain." });
     }
 
     // Hash password
