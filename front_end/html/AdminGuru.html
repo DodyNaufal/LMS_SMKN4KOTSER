@@ -369,15 +369,11 @@
             />
           </div>
 
-          <div>
+          <!-- <div>
             <label class="block text-sm font-medium text-gray-600 mb-1"
               >Kelas</label
             >
-            <!-- <input
-              type="text"
-              id="guruKelas"
-              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            /> -->
+
             <select
               id="guruKelas"
               multiple
@@ -395,7 +391,7 @@
             <small class="text-gray-400 text-xs"
               >Gunakan Ctrl (atau Cmd) untuk pilih lebih dari satu</small
             >
-          </div>
+          </div> -->
 
           <!-- Tombol Simpan -->
           <div class="flex justify-end pt-4">
@@ -530,11 +526,11 @@
             email: document.getElementById("guruEmail").value,
             nip: document.getElementById("guruNip").value,
             mapel: document.getElementById("guruMapel").value,
-            kelas: Array.from(
-              document.getElementById("guruKelas").selectedOptions
-            )
-              .map((opt) => opt.value)
-              .join(", "),
+            // kelas: Array.from(
+            //   document.getElementById("guruKelas").selectedOptions
+            // )
+            //   .map((opt) => opt.value)
+            //   .join(", "),
           };
 
           if (!id)
@@ -583,14 +579,14 @@
                 document.getElementById("guruNip").value = data.nip || "";
                 document.getElementById("guruMapel").value = data.mapel || "";
 
-                const kelasArray = (data.kelas || "")
-                  .split(",")
-                  .map((k) => k.trim());
-                Array.from(
-                  document.getElementById("guruKelas").options
-                ).forEach((opt) => {
-                  opt.selected = kelasArray.includes(opt.value);
-                });
+                // const kelasArray = (data.kelas || "")
+                //   .split(",")
+                //   .map((k) => k.trim());
+                // Array.from(
+                //   document.getElementById("guruKelas").options
+                // ).forEach((opt) => {
+                //   opt.selected = kelasArray.includes(opt.value);
+                // });
 
                 const passwordGroup =
                   document.getElementById("guruPassword")?.parentElement;
